@@ -16,7 +16,8 @@ let operations = {
 	'divide': 		{'div': document.querySelector('.divide')},
 };
 
-
+let clearButton = document.querySelector('.clear');
+let deleteButton = document.querySelector('.delete');
 
 
 
@@ -42,19 +43,21 @@ Object.keys(numbers).forEach((item) => {
 
 
 
-Object.keys(operations).forEach((item) => {
+Object.keys(operations).forEach(function(item) {
 	
 	operations[item]['div'].addEventListener('click', function() {
 		let tmpString = numberInInput();
-		addFromInputToProcess(tmpString);
+		addFromInputToProcess(tmpString + this.innerText);
 		cleanProcessInput();
 	});
 
 });
 
 
-
-
+clearButton.addEventListener('click', AC); 
+deleteButton.addEventListener('click', () => {
+	processInput.removeChild(processInput.firstChild);	
+});
 
 
 
@@ -72,25 +75,35 @@ function cleanProcessInput() {
 
 
 function addFromInputToProcess(_text) {
-	for (i = 0; i < _text.length; ++i) {
-		let tmpP = document.createElement('p');
-		tmpP.innerText = _text[i];
-		processDisplay.appendChild(tmpP);
-	}
+	// for (i = 0; i < _text.length; ++i) {
+	// 	let tmpP = document.createElement('p');
+	// 	tmpP.innerText = _text[i];
+	// 	processDisplay.appendChild(tmpP);
+	// }
+	let tmpP = document.createElement('p');
+	tmpP.innerText = _text;
+	processDisplay.appendChild(tmpP);
 }
 
 function numberInInput() {
 	let tmpString = '';  // actually could just create a loop without needed this, but can use this for later...
-	processInput.childNodes.forEach(
+	Array.from(processInput.childNodes).reverse().forEach(
 		(item) => 
 		{
 			tmpString = tmpString + item.innerText;
 		}
 	);
+	console.log(tmpString);
 	return tmpString;
 }
 
+function AC() {
+	while (processInput.firstChild)
+		processInput.removeChild(processInput.firstChild);
 
+	while (processDisplay.firstChild)
+		processDisplay.removeChild(processDisplay.firstChild);
+}
 
 
 
