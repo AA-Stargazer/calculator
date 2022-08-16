@@ -47,7 +47,8 @@ Object.keys(operations).forEach(function(item) {
 	
 	operations[item]['div'].addEventListener('click', function() {
 		let tmpString = numberInInput();
-		addFromInputToProcess(tmpString + this.innerText);
+		addFromInputToProcess(tmpString);
+		addFromInputToProcess(this.innerText);
 		cleanProcessInput();
 	});
 
@@ -75,14 +76,9 @@ function cleanProcessInput() {
 
 
 function addFromInputToProcess(_text) {
-	// for (i = 0; i < _text.length; ++i) {
-	// 	let tmpP = document.createElement('p');
-	// 	tmpP.innerText = _text[i];
-	// 	processDisplay.appendChild(tmpP);
-	// }
 	let tmpP = document.createElement('p');
 	tmpP.innerText = _text;
-	processDisplay.appendChild(tmpP);
+	processDisplay.insertAdjacentElement('afterbegin', tmpP);
 }
 
 function numberInInput() {
