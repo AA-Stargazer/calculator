@@ -10,10 +10,10 @@ for (i = 0; i < 10; ++i) {
 }
 
 let operations = {
-	'sum': 			{'div': document.querySelector('.sum')},
-	'substract': 	{'div': document.querySelector('.substract')},
-	'multiply': 	{'div': document.querySelector('.multiply')},		
-	'divide': 		{'div': document.querySelector('.divide')},
+	'sum': 			{'div': document.querySelector('.sum'), 'symbol': '+'},
+	'substract': 	{'div': document.querySelector('.substract'), 'symbol': '-'},
+	'multiply': 	{'div': document.querySelector('.multiply'), 'symbol': '*'},		
+	'divide': 		{'div': document.querySelector('.divide'), 'symbol': '/'},
 };
 
 let clearButton = document.querySelector('.clear');
@@ -118,6 +118,54 @@ function AC() {
 	while (processDisplay.firstChild)
 		processDisplay.removeChild(processDisplay.firstChild);
 }
+
+function calculate(operation, num1, num2) {
+	switch(operation) {
+		case '+':
+			return parseFloat(num1) + parseFloat(num2);
+		case '-':
+			return parseFloat(num1) - parseFloat(num2);
+		case '/':
+			return parseFloat(num1) / parseFloat(num2);
+		case '*':
+			return parseFloat(num1) * parseFloat(num2);
+	}
+}
+
+// ok, for the first time, got some links to put here:
+// -- https://stackoverflow.com/questions/10596417/is-there-a-way-to-get-element-by-xpath-using-javascript-in-selenium-webdriver
+// -- -- https://stackoverflow.com/a/14284815     ( .evaluate() )
+// -- https://developer.mozilla.org/en-US/docs/Web/API/Document/evaluate
+// -- -- https://developer.mozilla.org/en-US/docs/Web/XPath/Introduction_to_using_XPath_in_JavaScript
+// ----- -- we can get nodes with snapshot (XPathResult.ORDERED_NODE_SNAPSHOT_TYPE)  or iterateNext ...
+
+
+function order_operator_priority() {
+	// this is overdone I know, but I made it to get used to things and learn, so leaving as it is here...
+	// let operations_keys = Object.keys(operations);
+	// 
+	// let multiplication_division_xpath = '//div[@class="process"]/*[';
+	// for (let i = 0; i < operations_keys.length; ++i)
+	// {
+	// 	let symbol = operations[operations_keys[i]]['symbol'];
+	// 	if (symbol == '*' || symbol == '/')
+	// 	{
+	// 		if (i == 0)
+	// 			multiplication_division_xpath = multiplication_division_xpath + `contains(text(), "${symbol}")`;
+	// 		else
+	// 			multiplication_division_xpath = multiplication_division_xpath + ` or contains(text(), "${symbol}")`;
+	// 	}
+	// }
+	// multiplication_division_xpath = multiplication_division_xpath + ']';
+	multiplication_division_xpath = '//div[@class="process"]/*[contains(text(), "*") or contains(text(), "/")]';
+	// console.log(multiplication_division_xpath);
+
+	let multiplication_division_nodes = document.evaluate(multiplication_division_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+	// console.log(multiplication_division_nodes.snapshotLength);
+	return multiplication_division_nodes;
+}
+
+
 
 
 
