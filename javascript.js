@@ -18,7 +18,8 @@ let operations = {
 
 let clearButton = document.querySelector('.clear');
 let deleteButton = document.querySelector('.delete');
-
+let numbersArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+let operationsArray = ['*', '/', '+', '-'];
 
 
 
@@ -46,10 +47,27 @@ Object.keys(numbers).forEach((item) => {
 Object.keys(operations).forEach(function(item) {
 	
 	operations[item]['div'].addEventListener('click', function() {
+		let firstChildProcessDisplay = document.querySelector('.process').firstChild;
+		// console.log(firstChildProcessDisplay);
+				
 		let tmpString = numberInInput();
-		addFromInputToProcess(tmpString);
-		addFromInputToProcess(this.innerText);
-		cleanProcessInput();
+		
+		// (!firstChildProcessDisplay.innerText), if display is empty, we can directly pass things...
+		if (!firstChildProcessDisplay.innerText) {
+			addFromInputToProcess(tmpString);
+			addFromInputToProcess(this.innerText);
+			cleanProcessInput();
+		}
+		else{
+			let tmpString = numberInInput();
+			if (tmpString != '') // this probably would be enough...
+			{
+				addFromInputToProcess(tmpString);
+				addFromInputToProcess(this.innerText);
+				cleanProcessInput();
+
+			}
+		}
 	});
 
 });
@@ -89,7 +107,7 @@ function numberInInput() {
 			tmpString = tmpString + item.innerText;
 		}
 	);
-	console.log(tmpString);
+	// console.log(tmpString);
 	return tmpString;
 }
 
@@ -100,7 +118,6 @@ function AC() {
 	while (processDisplay.firstChild)
 		processDisplay.removeChild(processDisplay.firstChild);
 }
-
 
 
 
