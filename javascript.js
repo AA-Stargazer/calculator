@@ -20,7 +20,7 @@ let clearButton = document.querySelector('.clear');
 let deleteButton = document.querySelector('.delete');
 let numbersArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 let operationsArray = ['*', '/', '+', '-'];
-
+let equalButton = document.querySelector('.equal');
 
 
 // --------------------------- ASSIGNMENT -------------------------------
@@ -33,11 +33,21 @@ Object.keys(numbers).forEach((item) => {
 	//https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#the_value_of_this_within_the_handler
 	//arrow function don't have 'this', also arrow function didn't have \arguments' AFA I remember
 	numbers[item]['div'].addEventListener('click', function() {
-		let newP = document.createElement('p');
-		newP.innerText = this.classList[1].split('-')[1];
-		// https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement
-		processInput.insertAdjacentElement('afterBegin', newP);
-
+		if (this.innerText != '0') 
+		{
+			let newP = document.createElement('p');
+			newP.innerText = this.classList[1].split('-')[1];
+			processInput.insertAdjacentElement('afterBegin', newP);
+		}
+		else
+		{
+			if (processInput.firstChild)
+			{
+				let newP = document.createElement('p');
+				newP.innerText = this.classList[1].split('-')[1];
+				processInput.insertAdjacentElement('afterBegin', newP);
+			}
+		}
 	});
 
 });
@@ -78,7 +88,7 @@ deleteButton.addEventListener('click', () => {
 	processInput.removeChild(processInput.firstChild);	
 });
 
-
+equalButton.addEventListener('click', multiplication_division_execute);
 
 
 
@@ -120,6 +130,7 @@ function AC() {
 }
 
 function calculate(operation, num1, num2) {
+	console.log(num1, operation, num2);
 	switch(operation) {
 		case '+':
 			return parseFloat(num1) + parseFloat(num2);
@@ -141,31 +152,25 @@ function calculate(operation, num1, num2) {
 
 
 // it will be a bit messy I guess... 
-function order_operator_priority() {
-	// this is overdone I know, but I made it to get used to things and learn, so leaving as it is here...
-	// let operations_keys = Object.keys(operations);
-	// 
-	// let multiplication_division_xpath = '//div[@class="process"]/*[';
-	// for (let i = 0; i < operations_keys.length; ++i)
-	// {
-	// 	let symbol = operations[operations_keys[i]]['symbol'];
-	// 	if (symbol == '*' || symbol == '/')
-	// 	{
-	// 		if (i == 0)
-	// 			multiplication_division_xpath = multiplication_division_xpath + `contains(text(), "${symbol}")`;
-	// 		else
-	// 			multiplication_division_xpath = multiplication_division_xpath + ` or contains(text(), "${symbol}")`;
-	// 	}
-	// }
-	// multiplication_division_xpath = multiplication_division_xpath + ']';
+function multiplication_division_execute() {
 	multiplication_division_xpath = '//div[@class="process"]/*[contains(text(), "*") or contains(text(), "/")]';
-	// console.log(multiplication_division_xpath);
 
 	let multiplication_division_nodes = document.evaluate(multiplication_division_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-	// console.log(multiplication_division_nodes.snapshotLength);
-	// console.log(multiplication_division_nodes.snapshotItem(0).nextSibling, multiplication_division_nodes.snapshotItem(0).previousSibling);
-	return multiplication_division_nodes;
+	console.log(multiplication_division_nodes);
+	console.log(multiplication_division_nodes.snapshotLength);
+	
+	for (let i = 0; i < multiplication_division_nodes.snapshotLength; ++i) 
+	{
+		let the_node = multiplication_division_nodes.snapshotItem(i);
+		const num1 = the_node.nextSibling.innerText;
+		const num2 = the_node.previousSibling.innerText;
+		// console.log(the_node, the_node.innerText);
+		console.log(calculate(the_node.innerText, num1, num2));
+	}
 }
+
+
+
 
 
 
