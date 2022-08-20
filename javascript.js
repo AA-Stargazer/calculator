@@ -140,6 +140,7 @@ function calculate(operation, num1, num2) {
 // ----- -- we can get nodes with snapshot (XPathResult.ORDERED_NODE_SNAPSHOT_TYPE)  or iterateNext ...
 
 
+// it will be a bit messy I guess... 
 function order_operator_priority() {
 	// this is overdone I know, but I made it to get used to things and learn, so leaving as it is here...
 	// let operations_keys = Object.keys(operations);
@@ -162,9 +163,9 @@ function order_operator_priority() {
 
 	let multiplication_division_nodes = document.evaluate(multiplication_division_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 	// console.log(multiplication_division_nodes.snapshotLength);
+	// console.log(multiplication_division_nodes.snapshotItem(0).nextSibling, multiplication_division_nodes.snapshotItem(0).previousSibling);
 	return multiplication_division_nodes;
 }
-
 
 
 
