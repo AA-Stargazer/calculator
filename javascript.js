@@ -5,16 +5,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 // --------------------------- VARIABLE ---------------------------------
 let processDisplay = document.querySelector('.process');
 let processInput = document.querySelector('.process-input');
@@ -47,8 +37,6 @@ if (processInput.firstChild)
 
 Object.keys(numbers).forEach((item) => {
 	
-	//https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#the_value_of_this_within_the_handler
-	//arrow function don't have 'this', also arrow function didn't have \arguments' AFA I remember
 	numbers[item]['div'].addEventListener('click', function() {
 		if (this.innerText != '0') 
 		{
@@ -160,15 +148,6 @@ function calculate(operation, num1, num2) {
 	}
 }
 
-
-// ok, for the first time for xpath, got some links to put here:
-// -- https://stackoverflow.com/questions/10596417/is-there-a-way-to-get-element-by-xpath-using-javascript-in-selenium-webdriver
-// -- -- https://stackoverflow.com/a/14284815     ( .evaluate() )
-// -- https://developer.mozilla.org/en-US/docs/Web/API/Document/evaluate
-// -- -- https://developer.mozilla.org/en-US/docs/Web/XPath/Introduction_to_using_XPath_in_JavaScript
-// ----- -- we can get nodes with snapshot (XPathResult.ORDERED_NODE_SNAPSHOT_TYPE)  or iterateNext ...
-
-
 function executeCalculation() {
 	if (processInput.firstChild)
 	{
@@ -213,9 +192,6 @@ function multiplication_division_execute() {
 		num1Node.innerText = calculate(the_node.innerText, num1, num2);
 		console.log(num1Node);
 		
-		// for the step by step cleaning part, we do use something like
-		// document.evaluate('.//parent::*', NODE, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE) --- (you can also get the NODE from .evaluate etc (but using snapshot would be better for single line usage...)...
-		// but we already have the node
 		processDisplay.removeChild(num2Node);
 		processDisplay.removeChild(the_node);
 		
