@@ -1,3 +1,20 @@
+// IDEAS
+// to left or right etc, add a div, and pass what's inside processDisplay beefore executing calculation with equalButton, so it can be like past calculations, also make them insnide <a>, so when the user click, we can pass what's inside the particular divs that repressents past calculations into the processDisplay...
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // --------------------------- VARIABLE ---------------------------------
 let processDisplay = document.querySelector('.process');
 let processInput = document.querySelector('.process-input');
@@ -88,7 +105,7 @@ deleteButton.addEventListener('click', () => {
 	processInput.removeChild(processInput.firstChild);	
 });
 
-equalButton.addEventListener('click', multiplication_division_execute);
+equalButton.addEventListener('click', executeCalculation);
 
 
 
@@ -143,12 +160,22 @@ function calculate(operation, num1, num2) {
 	}
 }
 
-// ok, for the first time, got some links to put here:
+
+// ok, for the first time for xpath, got some links to put here:
 // -- https://stackoverflow.com/questions/10596417/is-there-a-way-to-get-element-by-xpath-using-javascript-in-selenium-webdriver
 // -- -- https://stackoverflow.com/a/14284815     ( .evaluate() )
 // -- https://developer.mozilla.org/en-US/docs/Web/API/Document/evaluate
 // -- -- https://developer.mozilla.org/en-US/docs/Web/XPath/Introduction_to_using_XPath_in_JavaScript
 // ----- -- we can get nodes with snapshot (XPathResult.ORDERED_NODE_SNAPSHOT_TYPE)  or iterateNext ...
+
+
+function executeCalculation() {
+	if (processInput.firstChild)
+		multiplication_division_execute();
+}
+
+
+
 
 
 // it will be a bit messy I guess... 
@@ -159,14 +186,29 @@ function multiplication_division_execute() {
 	console.log(multiplication_division_nodes);
 	console.log(multiplication_division_nodes.snapshotLength);
 	
-	for (let i = 0; i < multiplication_division_nodes.snapshotLength; ++i) 
+	// operations priority from left to right,
+	let snpshtLength = multiplication_division_nodes.snapshotLength;
+	for (let i = 0; i < snpshtLength; ++i) 
 	{
-		let the_node = multiplication_division_nodes.snapshotItem(i);
-		const num1 = the_node.nextSibling.innerText;
-		const num2 = the_node.previousSibling.innerText;
-		// console.log(the_node, the_node.innerText);
-		console.log(calculate(the_node.innerText, num1, num2));
+		let the_node = multiplication_division_nodes.snapshotItem(multiplication_division_nodes.snapshotLength-1);
+		console.log(the_node);
+		const num1Node = the_node.nextSibling;
+		const num1 = num1Node.innerText;
+		const num2Node = the_node.previousSibling;
+		const num2 = num2Node.innerText;
+
+		num1Node.innerText = calculate(the_node.innerText, num1, num2);
+		console.log(num1Node);
+		
+		// for the step by step cleaning part, we do use something like
+		// document.evaluate('.//parent::*', NODE, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE) --- (you can also get the NODE from .evaluate etc (but using snapshot would be better for single line usage...)...
+		// but we already have the node
+		processDisplay.removeChild(num2Node);
+		processDisplay.removeChild(the_node);
+		
+		multiplication_division_nodes = document.evaluate(multiplication_division_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 	}
+
 }
 
 
