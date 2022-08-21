@@ -171,7 +171,20 @@ function calculate(operation, num1, num2) {
 
 function executeCalculation() {
 	if (processInput.firstChild)
-		multiplication_division_execute();
+	{
+		// TODO add number in processInput to processDisplay
+		let newP = document.createElement('p');
+		newP.innerText = numberInInput();
+		processDisplay.insertAdjacentElement('afterBegin', newP);
+		cleanProcessInput();
+		setTimeout(
+			() => {
+			multiplication_division_execute();
+			addition_substraction_execute();
+			}
+			,1000
+		);
+	}
 }
 
 
@@ -191,7 +204,7 @@ function multiplication_division_execute() {
 	for (let i = 0; i < snpshtLength; ++i) 
 	{
 		let the_node = multiplication_division_nodes.snapshotItem(multiplication_division_nodes.snapshotLength-1);
-		console.log(the_node);
+		// console.log(the_node);
 		const num1Node = the_node.nextSibling;
 		const num1 = num1Node.innerText;
 		const num2Node = the_node.previousSibling;
@@ -212,6 +225,28 @@ function multiplication_division_execute() {
 }
 
 
+// very similat to multiplication_division
+function addition_substraction_execute() {
+	addition_substraction_xpath = '//div[@class="process"]/*[contains(text(), "+") or contains(text(), "-")]';
+
+	let addition_substraction_nodes = document.evaluate(addition_substraction_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+	
+	// operations priority from left to right,
+	let snpshtLength = addition_substraction_nodes.snapshotLength;
+	for (let i = 0; i < snpshtLength; ++i) 
+	{
+		let the_node = addition_substraction_nodes.snapshotItem(addition_substraction_nodes.snapshotLength-1);
+		const num1Node = the_node.nextSibling;
+		const num1 = num1Node.innerText;
+		const num2Node = the_node.previousSibling;
+		const num2 = num2Node.innerText;
+		num1Node.innerText = calculate(the_node.innerText, num1, num2);
+		processDisplay.removeChild(num2Node);
+		processDisplay.removeChild(the_node);
+		addition_substraction_nodes = document.evaluate(addition_substraction_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+	}
+
+}
 
 
 
