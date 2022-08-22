@@ -28,6 +28,7 @@ let deleteButton = document.querySelector('.delete');
 let numbersArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 let operationsArray = ['*', '/', '+', '-'];
 let equalButton = document.querySelector('.equal');
+let resultBeingShown = false;
 
 
 // --------------------------- ASSIGNMENT -------------------------------
@@ -80,7 +81,6 @@ Object.keys(operations).forEach(function(item) {
 				addFromInputToProcess(tmpString);
 				addFromInputToProcess(this.innerText);
 				cleanProcessInput();
-
 			}
 		}
 	});
@@ -105,10 +105,16 @@ function cleanProcessInput() {
 	while(processInput.firstChild)
 		processInput.removeChild(processInput.firstChild);
 }
+function cleanProcessDisplay() {
+	while(processDisplay.firstChild)
+		processDisplay.removeChild(processDisplay.firstChild);
+}
 
-
-
+// this is more llike, just add the _text to the proccessDisplay as <p>
 function addFromInputToProcess(_text) {
+	if (resultBeingShown)
+		cleanProcessDisplay();
+	resultBeingShown = false;
 	let tmpP = document.createElement('p');
 	tmpP.innerText = _text;
 	processDisplay.insertAdjacentElement('afterbegin', tmpP);
@@ -127,11 +133,8 @@ function numberInInput() {
 }
 
 function AC() {
-	while (processInput.firstChild)
-		processInput.removeChild(processInput.firstChild);
-
-	while (processDisplay.firstChild)
-		processDisplay.removeChild(processDisplay.firstChild);
+	cleanProcessInput();
+	cleanProcessDisplay();
 }
 
 function calculate(operation, num1, num2) {
@@ -160,6 +163,7 @@ function executeCalculation() {
 			() => {
 			multiplication_division_execute();
 			addition_substraction_execute();
+			resultBeingShown = true;
 			}
 			,1000
 		);
