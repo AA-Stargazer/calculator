@@ -77,8 +77,6 @@ Object.keys(operations).forEach(function(item) {
 			let tmpP = document.createElement('p');
 			tmpP.innerText = this.innerText;
 			processDisplay.insertAdjacentElement('afterbegin', tmpP);
-			// maybe we can create another if statement to show a warning to delete the processInput (number) or we delete it and show warning (idk) to firstly pass operation next to the number in the processDisplay;
-			// -- DECISION: I'll add the sign first and then what's inside the processInput
 			tmpP = document.createElement('p');
 			tmpP.innerText = numberInInput();
 			processDisplay.insertAdjacentElement('afterbegin', tmpP);
@@ -195,15 +193,10 @@ function executeCalculation() {
 			let newP = document.createElement('p');
 			newP.innerText = numberInInput();
 			processDisplay.insertAdjacentElement('afterBegin', newP);
-			cleanProcessInput();
-			setTimeout(
-				() => {
-				multiplication_division_execute();
-				addition_substraction_execute();
-				resultBeingShown = true;
-				}
-				,1000
-			);
+			cleanProcessInput();	
+			multiplication_division_execute();
+			addition_substraction_execute();
+			resultBeingShown = true;
 		}
 	}
 	else // after deletion, there might be calculations to process.
