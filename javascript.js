@@ -188,6 +188,15 @@ function executeCalculation() {
 			,1000
 		);
 	}
+	else // after deletion, there might be calculations to process.
+	{
+		if (processDisplay.childElementCount > 2) // min 2 number and 1 operation sign
+		{
+			multiplication_division_execute();
+			addition_substraction_execute();
+			resultBeingShown = true;
+		}
+	}
 }
 
 
