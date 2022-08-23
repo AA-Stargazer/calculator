@@ -77,8 +77,12 @@ Object.keys(operations).forEach(function(item) {
 			let tmpP = document.createElement('p');
 			tmpP.innerText = this.innerText;
 			processDisplay.insertAdjacentElement('afterbegin', tmpP);
-			cleanProcessInput(); // well if there's a number in the processInput, we can pass to the right of the operation, but don't know should we do this... It can be a bit more complicated for user to use...
 			// maybe we can create another if statement to show a warning to delete the processInput (number) or we delete it and show warning (idk) to firstly pass operation next to the number in the processDisplay;
+			// -- DECISION: I'll add the sign first and then what's inside the processInput
+			tmpP = document.createElement('p');
+			tmpP.innerText = numberInInput();
+			processDisplay.insertAdjacentElement('afterbegin', tmpP);
+			cleanProcessInput();
 		}
 		else
 		{
