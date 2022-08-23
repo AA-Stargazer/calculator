@@ -63,18 +63,16 @@ Object.keys(numbers).forEach((item) => {
 Object.keys(operations).forEach(function(item) {
 	
 	operations[item]['div'].addEventListener('click', function() {
-		let firstChildProcessDisplay = document.querySelector('.process').firstChild;
-		// console.log(firstChildProcessDisplay);
 				
 		let tmpString = numberInInput();
 		
-		// (!firstChildProcessDisplay.innerText), if display is empty, we can directly pass things...
-		if (!firstChildProcessDisplay.innerText) {
+		if (!processDisplay.firstChild) {
 			addFromInputToProcess(tmpString);
 			addFromInputToProcess(this.innerText);
 			cleanProcessInput();
 		}
-		else{
+		else
+		{
 			let tmpString = numberInInput();
 			if (tmpString != '') // this probably would be enough...
 			{
@@ -89,15 +87,37 @@ Object.keys(operations).forEach(function(item) {
 
 
 clearButton.addEventListener('click', AC); 
-deleteButton.addEventListener('click', () => {
-	processInput.removeChild(processInput.firstChild);	
-});
+deleteButton.addEventListener('click', cleaningFunction);
 
 equalButton.addEventListener('click', executeCalculation);
 
 
 
 // --------------------------- FUNCTIONS --------------------------------
+
+function cleaningFunction() {
+	
+	if (processInput.firstChild)
+		processInput.removeChild(processInput.firstChild);
+	else
+		if (processDisplay.firstChild)
+		{	
+			let the_number = processDisplay.firstChild.innerText;	
+			if (parseInt(the_number)) // it's a number string in the processDisplay
+			{
+				if (the_number.length == 1) // if it's just a single digit number, just delete the <p> element (I decided to show the whole number as a single <p>, so it's easier to start to calculations here. Also not a big problem while deleting here...
+					processDisplay.removeChild(processDisplay.firstChild);
+				else
+				{
+					processDisplay.firstChild.innerText = the_number.slice(0, -1);
+				}
+			}
+			else // it's operation sign
+			{
+				processDisplay.removeChild(processDisplay.firstChild);
+			}
+		}
+}
 
 
 
@@ -227,6 +247,7 @@ function addition_substraction_execute() {
 	}
 
 }
+
 
 
 
