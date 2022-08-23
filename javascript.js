@@ -59,17 +59,26 @@ Object.keys(numbers).forEach((item) => {
 });
 
 
-
+// numbers can be passed through operation signs or in the end with process execution...
 Object.keys(operations).forEach(function(item) {
 	
 	operations[item]['div'].addEventListener('click', function() {
 				
 		let tmpString = numberInInput();
 		
-		if (!processDisplay.firstChild) {
+		if (!processDisplay.firstChild) // there'sn't anything in the processDisplay, directly can pass
+		{
 			addFromInputToProcess(tmpString);
 			addFromInputToProcess(this.innerText);
 			cleanProcessInput();
+		}
+		else if (parseInt(processDisplay.firstChild.innerText)) // element at the rightest in processDisplay is not a operation sign but a number, so we should pass operation sign
+		{
+			let tmpP = document.createElement('p');
+			tmpP.innerText = this.innerText;
+			processDisplay.insertAdjacentElement('afterbegin', tmpP);
+			cleanProcessInput(); // well if there's a number in the processInput, we can pass to the right of the operation, but don't know should we do this... It can be a bit more complicated for user to use...
+			// maybe we can create another if statement to show a warning to delete the processInput (number) or we delete it and show warning (idk) to firstly pass operation next to the number in the processDisplay;
 		}
 		else
 		{
@@ -172,21 +181,26 @@ function calculate(operation, num1, num2) {
 }
 
 function executeCalculation() {
+	// TODO, after calculation executed, we can add processInput number just next to a processDisplay number which is the result of the calculation  without any operation between numbers. 
+
 	if (processInput.firstChild)
 	{
-		// TODO add number in processInput to processDisplay
-		let newP = document.createElement('p');
-		newP.innerText = numberInInput();
-		processDisplay.insertAdjacentElement('afterBegin', newP);
-		cleanProcessInput();
-		setTimeout(
-			() => {
-			multiplication_division_execute();
-			addition_substraction_execute();
-			resultBeingShown = true;
-			}
-			,1000
-		);
+		if (!parseInt(processDisplay.firstChild.innerText))
+		{
+			// TODO add number in processInput to processDisplay
+			let newP = document.createElement('p');
+			newP.innerText = numberInInput();
+			processDisplay.insertAdjacentElement('afterBegin', newP);
+			cleanProcessInput();
+			setTimeout(
+				() => {
+				multiplication_division_execute();
+				addition_substraction_execute();
+				resultBeingShown = true;
+				}
+				,1000
+			);
+		}
 	}
 	else // after deletion, there might be calculations to process.
 	{
