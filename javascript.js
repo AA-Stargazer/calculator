@@ -1,8 +1,9 @@
 // IDEAS
 // to left or right etc, add a div, and pass what's inside processDisplay beefore executing calculation with equalButton, so it can be like past calculations, also make them insnide <a>, so when the user click, we can pass what's inside the particular divs that repressents past calculations into the processDisplay...
 //
-
-
+// TODO show the result in the proccessInput... or not. idk. leave this as is, just create the div for past processes
+// TODO when the number for example too long, it shouldn't exceed boundries
+// dot
 
 
 // --------------------------- VARIABLE ---------------------------------
@@ -25,6 +26,8 @@ let operations = {
 
 let clearButton = document.querySelector('.clear');
 let deleteButton = document.querySelector('.delete');
+let dotButton = document.querySelector('.dot');
+
 let numbersArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 let operationsArray = ['*', '/', '+', '-'];
 let equalButton = document.querySelector('.equal');
@@ -102,6 +105,18 @@ deleteButton.addEventListener('click', cleaningFunction);
 
 equalButton.addEventListener('click', executeCalculation);
 
+dotButton.addEventListener('click', function() {
+	if (processInput.firstChild)
+	{
+		if (processInput.firstChild.innerText != '.')
+		{
+			let tmpP = document.createElement('p');
+			tmpP.innerText = this.innerText;
+			processInput.insertAdjacentElement('afterbegin', tmpP);
+		}
+	}
+});
+
 
 
 // --------------------------- FUNCTIONS --------------------------------
@@ -145,7 +160,7 @@ function cleanProcessDisplay() {
 function addFromInputToProcess(_text) {
 	if (resultBeingShown)
 		cleanProcessDisplay();
-	resultBeingShown = false;
+		resultBeingShown = false;
 	let tmpP = document.createElement('p');
 	tmpP.innerText = _text;
 	processDisplay.insertAdjacentElement('afterbegin', tmpP);
@@ -160,6 +175,8 @@ function numberInInput() {
 		}
 	);
 	// console.log(tmpString);
+	if (tmpString[tmpString.length - 1] == '.')
+		tmpString = tmpString.slice(0, -1);
 	return tmpString;
 }
 

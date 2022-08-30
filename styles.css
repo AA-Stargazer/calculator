@@ -1,27 +1,42 @@
 :root {
 	--bg-color: #060108;
+	--inner-color: rgb(255, 204, 0, 0.9);
 }
 
 
 
 html, body {
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 	margin: 0;
 	padding: 0;
 	background-color: var(--bg-color);
-}
-
-.content-parent {
-	width: 100%;
-	height: 100%;
+	color: var(--inner-color);
+	font-weight: 800;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.content {
+.content-parent {
+	width: 30cm;
+	height: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	padding: 0.5cm;
+}
+
+.content-parent > div {
 	width: 5cm;
+	height: 5cm;
+	display: block;
+	overflow: hidden;
+}
+
+.content-parent > div.content {
+	width: 5cm;
+	height: initial;
 	background-color: #15BCD6;
 	box-shadow: 0 0 0.5cm #F0DCF5; 
 	padding: 0.2cm;
@@ -88,8 +103,24 @@ html, body {
 	width: 100%;
 	height: 100%;
 	font-weight: 800;
-	color: var(--bg-color); 
+	background-color: transparent;
+	border: #008599;
+	border-width: 1mm;
+	border-style: solid;
+	border-radius: 0.1cm;
+	color: var(--bg-color);
+	transition-duration: 0.1s;
 }
+
+.box button:hover {
+	box-shadow: 0 0 0.2cm var(--inner-color) inset; 
+}
+
+
+
+
+
+
 
 
 /* -------------------------------------------------------------------- */
