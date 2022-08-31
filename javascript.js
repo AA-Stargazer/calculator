@@ -39,9 +39,9 @@ if (processInput.firstChild)
 	processInput.removeChild(processInput.firstChild);
 
 
-Object.keys(numbers).forEach((item) => {
+Object.keys(numbers).forEach((key) => {
 	
-	numbers[item]['div'].addEventListener('click', function() {
+	numbers[key]['div'].addEventListener('click', function() {
 		if (this.innerText != '0') 
 		{
 			let newP = document.createElement('p');
@@ -63,9 +63,9 @@ Object.keys(numbers).forEach((item) => {
 
 
 // numbers can be passed through operation signs or in the end with process execution...
-Object.keys(operations).forEach(function(item) {
+Object.keys(operations).forEach(function(key) {
 	
-	operations[item]['div'].addEventListener('click', function() {
+	operations[key]['div'].addEventListener('click', function() {
 				
 		let tmpString = numberInInput();
 		
