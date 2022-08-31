@@ -41,22 +41,29 @@ if (processInput.firstChild)
 
 Object.keys(numbers).forEach((key) => {
 	
+	// // // maybe let the user pass 0, and improve the numberInInput funcion for like 00008 to 8...
+	// numbers[key]['div'].addEventListener('click', function() {
+	// 	if (this.innerText != '0') 
+	// 	{
+	// 		let newP = document.createElement('p');
+	// 		newP.innerText = this.classList[1].split('-')[1];
+	// 		processInput.insertAdjacentElement('afterBegin', newP);
+	// 	}
+	// 	else
+	// 	{
+	// 		if (processInput.firstChild)
+	// 		{
+	// 			let newP = document.createElement('p');
+	// 			newP.innerText = this.classList[1].split('-')[1];
+	// 			processInput.insertAdjacentElement('afterBegin', newP);
+	// 		}
+	// 	}
+	// });
+
 	numbers[key]['div'].addEventListener('click', function() {
-		if (this.innerText != '0') 
-		{
-			let newP = document.createElement('p');
-			newP.innerText = this.classList[1].split('-')[1];
-			processInput.insertAdjacentElement('afterBegin', newP);
-		}
-		else
-		{
-			if (processInput.firstChild)
-			{
-				let newP = document.createElement('p');
-				newP.innerText = this.classList[1].split('-')[1];
-				processInput.insertAdjacentElement('afterBegin', newP);
-			}
-		}
+		let newP = document.createElement('p');
+		newP.innerText = this.classList[1].split('-')[1];
+		processInput.insertAdjacentElement('afterBegin', newP);
 	});
 
 });
@@ -168,15 +175,74 @@ function addFromInputToProcess(_text) {
 
 function numberInInput() {
 	let tmpString = '';  // actually could just create a loop without needed this, but can use this for later...
+	// let zeroFromFirst = true;
 	Array.from(processInput.childNodes).reverse().forEach(
-		(item) => 
+		(element) => 
 		{
-			tmpString = tmpString + item.innerText;
+			tmpString = tmpString + element.innerText;
+			
+			// ------ we just need to remove extra 0s in the start of the number, creating another loop wouldn't harm...
+			// // update for numbers like 00000888, leting 0 to be addable, 
+			// if (zeroFromFirst)
+			// {
+			// 	if (element.innerText == '.')
+			// 	{
+			// 		
+			// 	}
+			// 	else if (element.innerText != '0')
+			// 	{
+			// 		zeroFromFirst = false;
+			// 		tmpString = tmpString + element.innerText;
+			// 	}
+
+			// }
+			// else
+			// {
+			// 	tmpString = tmpString + element.innerText;
+			// }
 		}
 	);
+	
+
 	// console.log(tmpString);
-	if (tmpString[tmpString.length - 1] == '.')
-		tmpString = tmpString.slice(0, -1);
+
+	if (tmpString.length > 1)
+	{
+		if (!stringIncludesChar(tmpString, '.'))
+		{
+			let indexZeroUntil = 0;
+			for (let i = 0; i < tmpString.length; ++i)
+			{
+				if (tmpString[i] != '0')
+				{
+					indexZeroUntil = i;
+					break;
+				}
+			}
+			tmpString = tmpString.slice(indexZeroUntil, );
+			console.log(tmpString);
+		}
+		else // if number includes dot
+		{	
+			let indexZeroUntil = 0;
+			for (let i = 0; i < tmpString.length - 1; ++i)
+			{
+				if (tmpString[i + 1] != '.') // until the number before dot
+				{
+					if (tmpString[i] != '0') // until 0s ends in the number from start (for 000000003.0990 > 3.0990)
+					{
+						indexZeroUntil = i;
+						break;
+					}
+				}
+				else
+					break;
+			}
+			tmpString = tmpString.slice(indexZeroUntil, );
+		}
+	}
+
+	// console.log(tmpString);
 	return tmpString;
 }
 
@@ -285,7 +351,14 @@ function addition_substraction_execute() {
 
 }
 
-
+function stringIncludesChar(_string, _char) {
+	let it_has = false;
+	Array.from(_string).forEach((stringChar) => {
+		if (stringChar == _char)
+			it_has = true;
+	});
+	return it_has;
+}
 
 
 
