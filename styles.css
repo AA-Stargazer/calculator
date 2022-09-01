@@ -78,6 +78,7 @@ html, body {
 	text-align: right;
 	display: flex;
 	flex-direction: row-reverse;
+	overflow: hidden;
 }
 
 .process {
@@ -89,6 +90,7 @@ html, body {
 	justify-content: right;
 	align-items: top;
 	align-content: top;
+	overflow: hidden;
 }
 
 
@@ -115,6 +117,14 @@ html, body {
 .box button:hover {
 	box-shadow: 0 0 0.2cm var(--inner-color) inset; 
 }
+
+.past > div {
+	display: flex;
+	justify-content: left;
+	align-items: center;
+
+}
+
 
 
 

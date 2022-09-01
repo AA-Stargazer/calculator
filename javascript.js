@@ -3,13 +3,18 @@
 //
 // TODO show the result in the proccessInput... or not. idk. leave this as is, just create the div for past processes
 // TODO when the number for example too long, it shouldn't exceed boundries
-// dot
+// TODO overflow of the process and process-input, when user hover mouse on left or right, scroll the flow to left or right...
+
+// NOTE after having result, if we continue without clicking AC etc, when we pass numbers with operations, operations all bein left in the left of the added number. Which we adjusted like this, but we can add ANS. So the user can continue like he started how to use the calculator...
+
 
 
 // --------------------------- VARIABLE ---------------------------------
+let divOfPast = document.querySelector('.past');
 let processDisplay = document.querySelector('.process');
 let processInput = document.querySelector('.process-input');
 let i;
+let ANS = null;
 let numbers = {};
 for (i = 0; i < 10; ++i) {
 	let tmp_txt = `digit-${i}`;
@@ -40,26 +45,6 @@ if (processInput.firstChild)
 
 
 Object.keys(numbers).forEach((key) => {
-	
-	// // // maybe let the user pass 0, and improve the numberInInput funcion for like 00008 to 8...
-	// numbers[key]['div'].addEventListener('click', function() {
-	// 	if (this.innerText != '0') 
-	// 	{
-	// 		let newP = document.createElement('p');
-	// 		newP.innerText = this.classList[1].split('-')[1];
-	// 		processInput.insertAdjacentElement('afterBegin', newP);
-	// 	}
-	// 	else
-	// 	{
-	// 		if (processInput.firstChild)
-	// 		{
-	// 			let newP = document.createElement('p');
-	// 			newP.innerText = this.classList[1].split('-')[1];
-	// 			processInput.insertAdjacentElement('afterBegin', newP);
-	// 		}
-	// 	}
-	// });
-
 	numbers[key]['div'].addEventListener('click', function() {
 		let newP = document.createElement('p');
 		newP.innerText = this.classList[1].split('-')[1];
@@ -175,9 +160,6 @@ function addFromInputToProcess(_text) {
 
 
 
-
-
-
 function numberInInput() {
 	let tmpString = '';  // actually could just create a loop without needed this, but can use this for later...
 	// let zeroFromFirst = true;
@@ -204,7 +186,7 @@ function numberInInput() {
 				}
 			}
 			tmpString = tmpString.slice(indexZeroUntil, );
-			console.log(tmpString);
+			// console.log(tmpString);
 		}
 		else // if number includes dot
 		{	
@@ -255,7 +237,7 @@ function numberInInput() {
 					}
 					else
 					{
-						console.log('aaaaaaaaaaaaaaaaaaaaaaa');
+						// console.log('aaaaaaaaaaaaaaaaaaaaaaa');
 						indexZeroUntilBefore = tmpString.length - 1 - i + 1;
 						break;
 					}
@@ -274,6 +256,12 @@ function numberInInput() {
 	// console.log(tmpString);
 	return tmpString;
 }
+
+
+
+
+
+
 
 function AC() {
 	cleanProcessInput();
@@ -296,6 +284,15 @@ function calculate(operation, num1, num2) {
 
 function executeCalculation() {
 	// TODO, after calculation executed, we can add processInput number just next to a processDisplay number which is the result of the calculation  without any operation between numbers. 
+	
+
+
+	// TODO, 'past' functionality
+	function fromProcessDisplayToPast() {
+		let tmpDiv = document.createElement('div');
+		tmpDiv.innerHTML = processDisplay.innerHTML;
+		divOfPast.insertAdjacentHTML('afterbegin', '<div>' + tmpDiv.innerHTML + '</div>');
+	}
 
 	if (processInput.firstChild)
 	{
@@ -305,6 +302,7 @@ function executeCalculation() {
 			let newP = document.createElement('p');
 			newP.innerText = numberInInput();
 			processDisplay.insertAdjacentElement('afterBegin', newP);
+			fromProcessDisplayToPast();
 			cleanProcessInput();	
 			multiplication_division_execute();
 			addition_substraction_execute();
@@ -313,6 +311,7 @@ function executeCalculation() {
 	}
 	else // after deletion, there might be calculations to process.
 	{
+		fromProcessDisplayToPast();
 		if (processDisplay.childElementCount > 2) // min 2 number and 1 operation sign
 		{
 			multiplication_division_execute();
