@@ -173,6 +173,12 @@ function addFromInputToProcess(_text) {
 	processDisplay.insertAdjacentElement('afterbegin', tmpP);
 }
 
+
+
+
+
+
+// TODO 2 number situatiion,  "8.", "0000000.8"
 function numberInInput() {
 	let tmpString = '';  // actually could just create a loop without needed this, but can use this for later...
 	// let zeroFromFirst = true;
@@ -180,32 +186,11 @@ function numberInInput() {
 		(element) => 
 		{
 			tmpString = tmpString + element.innerText;
-			
-			// ------ we just need to remove extra 0s in the start of the number, creating another loop wouldn't harm...
-			// // update for numbers like 00000888, leting 0 to be addable, 
-			// if (zeroFromFirst)
-			// {
-			// 	if (element.innerText == '.')
-			// 	{
-			// 		
-			// 	}
-			// 	else if (element.innerText != '0')
-			// 	{
-			// 		zeroFromFirst = false;
-			// 		tmpString = tmpString + element.innerText;
-			// 	}
-
-			// }
-			// else
-			// {
-			// 	tmpString = tmpString + element.innerText;
-			// }
 		}
 	);
-	
+
 
 	// console.log(tmpString);
-
 	if (tmpString.length > 1)
 	{
 		if (!stringIncludesChar(tmpString, '.'))
@@ -235,12 +220,20 @@ function numberInInput() {
 						break;
 					}
 				}
+				else if (tmpString[i + 1] == '.') // means for loop didn't broken and came up to this point and the next char is '.' (0e.g. 00000.8)
+				{
+					indexZeroUntil = i;
+					break;
+				}
 				else
 					break;
 			}
 			tmpString = tmpString.slice(indexZeroUntil, );
 		}
 	}
+	
+	if (tmpString[tmpString.length - 1] == '.')
+		tmpString = tmpString.slice(0, -1);
 
 	// console.log(tmpString);
 	return tmpString;
