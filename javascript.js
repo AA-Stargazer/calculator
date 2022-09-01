@@ -178,7 +178,6 @@ function addFromInputToProcess(_text) {
 
 
 
-// TODO 2 number situatiion,  "8.", "0000000.8"
 function numberInInput() {
 	let tmpString = '';  // actually could just create a loop without needed this, but can use this for later...
 	// let zeroFromFirst = true;
@@ -229,6 +228,43 @@ function numberInInput() {
 					break;
 			}
 			tmpString = tmpString.slice(indexZeroUntil, );
+
+			// ------
+			// very similar  with above, just in the opposite direction for the zeros after last number in the right of the dot... (e.g. , 0.200000000000 -> 0.2)
+			let indexZeroUntilBefore = 0;
+			for (let i = 0; i < tmpString.length; ++i)
+			{
+				// from right to left
+				let theChar = tmpString[tmpString.length - 1 - i];
+				let theCharBefore = tmpString[tmpString.length - 1 - i - 1];
+				if (theCharBefore != '.') // until the number just after dot
+				{
+					if (theChar != '0')
+					{
+						indexZeroUntilBefore = tmpString.length - i;
+						break;
+					}
+				}
+				else if (theCharBefore == '.')		// means for loop didn't broken and came up to this point and the next char is '.' (0e.g. 00000.8)
+													// also means something like .0, so can take it as inteeger dirrectly...
+				{
+					if (theChar == '0')
+					{
+						indexZeroUntilBefore = tmpString.length - 1 - i -1;
+						break;
+					}
+					else
+					{
+						console.log('aaaaaaaaaaaaaaaaaaaaaaa');
+						indexZeroUntilBefore = tmpString.length - 1 - i + 1;
+						break;
+					}
+				}
+				else
+					break;
+			}
+			tmpString = tmpString.slice(0, indexZeroUntilBefore);
+
 		}
 	}
 	
