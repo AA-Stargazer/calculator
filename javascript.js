@@ -4,9 +4,16 @@
 // TODO show the result in the proccessInput... or not. idk. leave this as is, just create the div for past processes
 // TODO when the number for example too long, it shouldn't exceed boundries
 // TODO overflow of the process and process-input, when user hover mouse on left or right, scroll the flow to left or right...
+// TODO update how ans showed, let the result still be shown in the procecssDisplay until new number entered... (result is also shown in the ans display...
+
+
 
 // NOTE after having result, if we continue without clicking AC etc, when we pass numbers with operations, operations all bein left in the left of the added number. Which we adjusted like this, but we can add ANS. So the user can continue like he started how to use the calculator...
 
+// NOTE I have lots of other things in my mind, but this already should be enough. Just will complete the past and ans parts, and then go on...
+// -- some of them are creating limited length array of ans, for example when you click ans twice, you'd get the result of twices previous operation etc..
+// -- there are some other usage things....
+//
 
 
 // --------------------------- VARIABLE ---------------------------------
@@ -38,6 +45,8 @@ let operationsArray = ['*', '/', '+', '-'];
 let equalButton = document.querySelector('.equal');
 let resultBeingShown = false;
 
+let ansButton = document.querySelector('.ans');
+let ansDisplay = document.querySelector('.ans-display p');
 
 // --------------------------- ASSIGNMENT -------------------------------
 if (processInput.firstChild)
@@ -106,6 +115,16 @@ dotButton.addEventListener('click', function() {
 			tmpP.innerText = this.innerText;
 			processInput.insertAdjacentElement('afterbegin', tmpP);
 		}
+	}
+});
+
+
+ansButton.addEventListener('click', () => {
+	if (ANS)
+	{
+		let tmpP = document.createElement('p');
+		tmpP.innerText = ANS;
+		processInput.insertAdjacentElement('afterbegin', tmpP);
 	}
 });
 
@@ -260,9 +279,6 @@ function numberInInput() {
 
 
 
-
-
-
 function AC() {
 	cleanProcessInput();
 	cleanProcessDisplay();
@@ -282,9 +298,9 @@ function calculate(operation, num1, num2) {
 	}
 }
 
+
 function executeCalculation() {
 	// TODO, after calculation executed, we can add processInput number just next to a processDisplay number which is the result of the calculation  without any operation between numbers. 
-	
 
 
 	// TODO, 'past' functionality
@@ -302,10 +318,18 @@ function executeCalculation() {
 			let newP = document.createElement('p');
 			newP.innerText = numberInInput();
 			processDisplay.insertAdjacentElement('afterBegin', newP);
-			fromProcessDisplayToPast();
 			cleanProcessInput();	
+		
+			fromProcessDisplayToPast();
+
 			multiplication_division_execute();
 			addition_substraction_execute();
+
+			ANS = parseFloat(processDisplay.firstChild.innerText);
+			updateAnsDisplay();
+
+			cleanProcessDisplay();
+
 			resultBeingShown = true;
 		}
 	}
@@ -316,10 +340,19 @@ function executeCalculation() {
 		{
 			multiplication_division_execute();
 			addition_substraction_execute();
+
+			ANS = parseFloat(processDisplay.firstChild.innerText);
+			updateAnsDisplay();
+
+			cleanProcessDisplay();
+
 			resultBeingShown = true;
 		}
 	}
+
 }
+
+
 
 
 
@@ -388,6 +421,11 @@ function stringIncludesChar(_string, _char) {
 	return it_has;
 }
 
+
+
+function updateAnsDisplay() {
+	ansDisplay.innerText = `ANS: ${ANS}`;
+}
 
 
 
