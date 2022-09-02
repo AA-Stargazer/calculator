@@ -1,6 +1,7 @@
 :root {
 	--bg-color: #060108;
 	--inner-color: rgb(255, 204, 0, 0.9);
+	--side-text-color: rgb(255, 204, 0, 0.5);
 }
 
 
@@ -122,9 +123,19 @@ html, body {
 	display: flex;
 	justify-content: left;
 	align-items: center;
-
+	color: var(--side-text-color);
 }
 
+.past > div:nth-child(1) {
+	color: var(--inner-color);
+}
+
+.ans-display-parent > div {
+	display: flex;
+	justify-content: right;
+	align-items: center;
+	color: var(--side-text-color);
+}
 
 
 

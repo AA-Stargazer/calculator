@@ -5,6 +5,7 @@
 // TODO when the number for example too long, it shouldn't exceed boundries
 // TODO overflow of the process and process-input, when user hover mouse on left or right, scroll the flow to left or right...
 // TODO update how ans showed, let the result still be shown in the procecssDisplay until new number entered... (result is also shown in the ans display...
+// 
 
 
 
@@ -13,7 +14,7 @@
 // NOTE I have lots of other things in my mind, but this already should be enough. Just will complete the past and ans parts, and then go on...
 // -- some of them are creating limited length array of ans, for example when you click ans twice, you'd get the result of twices previous operation etc..
 // -- there are some other usage things....
-//
+// -- for example when using ans, we can instead use 'ANS' as a word instead of it's number. But still there might be some peoples that want to use it like this, but I guess standard is just showing the word 'ANS'. Anyway, already been quite a while, I gotta go on... after adding hover scrolling for pastDisplay, processDisplay etc, I'll leave...
 
 
 // --------------------------- VARIABLE ---------------------------------
@@ -52,7 +53,6 @@ let ansDisplay = document.querySelector('.ans-display p');
 if (processInput.firstChild)
 	processInput.removeChild(processInput.firstChild);
 
-
 Object.keys(numbers).forEach((key) => {
 	numbers[key]['div'].addEventListener('click', function() {
 		let newP = document.createElement('p');
@@ -64,19 +64,26 @@ Object.keys(numbers).forEach((key) => {
 
 
 // numbers can be passed through operation signs or in the end with process execution...
+// NOTE, after adding ANS, adding firstly operation sign and then number is simply won't be used anymore, because the result restored in the ANS anymore and no need to directly continue from the result in the processDisplay. But result will be shown until number passed with operation sign... // but same if statement still can stand for 'after deletion'
 Object.keys(operations).forEach(function(key) {
 	
 	operations[key]['div'].addEventListener('click', function() {
 				
 		let tmpString = numberInInput();
 		
+		if (processDisplay.childElementCount == 1 && parseFloat(processDisplay.firstChild.innerText) == parseFloat(ANS))
+		{
+			cleanProcessDisplay();
+		}
+
+
 		if (!processDisplay.firstChild) // there'sn't anything in the processDisplay, directly can pass
 		{
 			addFromInputToProcess(tmpString);
 			addFromInputToProcess(this.innerText);
 			cleanProcessInput();
 		}
-		else if (parseInt(processDisplay.firstChild.innerText)) // element at the rightest in processDisplay is not a operation sign but a number, so we should pass operation sign
+		else if (parseInt(processDisplay.firstChild.innerText)) // element at the rightest in processDisplay is not a operation sign but a number, so we should pass operation sign    // this can also appear after deletion!!!
 		{
 			let tmpP = document.createElement('p');
 			tmpP.innerText = this.innerText;
@@ -88,7 +95,6 @@ Object.keys(operations).forEach(function(key) {
 		}
 		else
 		{
-			let tmpString = numberInInput();
 			if (tmpString != '') // this probably would be enough...
 			{
 				addFromInputToProcess(tmpString);
@@ -303,11 +309,12 @@ function executeCalculation() {
 	// TODO, after calculation executed, we can add processInput number just next to a processDisplay number which is the result of the calculation  without any operation between numbers. 
 
 
+
 	// TODO, 'past' functionality
 	function fromProcessDisplayToPast() {
 		let tmpDiv = document.createElement('div');
 		tmpDiv.innerHTML = processDisplay.innerHTML;
-		divOfPast.insertAdjacentHTML('afterbegin', '<div>' + tmpDiv.innerHTML + '</div>');
+		divOfPast.insertBefore(tmpDiv, document.querySelector('.to-insert-before'));
 	}
 
 	if (processInput.firstChild)
@@ -328,23 +335,20 @@ function executeCalculation() {
 			ANS = parseFloat(processDisplay.firstChild.innerText);
 			updateAnsDisplay();
 
-			cleanProcessDisplay();
-
 			resultBeingShown = true;
 		}
 	}
-	else // after deletion, there might be calculations to process.
+	else // after deletion, there might be calculations to process etc,...
 	{
-		fromProcessDisplayToPast();
 		if (processDisplay.childElementCount > 2) // min 2 number and 1 operation sign
 		{
+			fromProcessDisplayToPast();
+			
 			multiplication_division_execute();
 			addition_substraction_execute();
 
 			ANS = parseFloat(processDisplay.firstChild.innerText);
 			updateAnsDisplay();
-
-			cleanProcessDisplay();
 
 			resultBeingShown = true;
 		}
@@ -424,7 +428,7 @@ function stringIncludesChar(_string, _char) {
 
 
 function updateAnsDisplay() {
-	ansDisplay.innerText = `ANS: ${ANS}`;
+	ansDisplay.innerText = `${ANS} = ANS`;
 }
 
 
