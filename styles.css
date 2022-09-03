@@ -26,11 +26,12 @@ html, body {
 	justify-content: space-around;
 	align-items: center;
 	padding: 0.5cm;
+	z-index: 500;
 }
 
 .content-parent > div {
 	width: 5cm;
-	height: 5cm;
+	height: 80%;
 	display: block;
 	overflow: hidden;
 }
@@ -47,6 +48,13 @@ html, body {
 	border-radius: 0.2cm;
 }
 
+.ans-display-parent > div {
+	display: flex;
+	justify-content: right;
+	align-items: center;
+	color: var(--side-text-color);
+}
+
 .content > div {
 	width: 100%;
 	height: 100%;
@@ -55,6 +63,7 @@ html, body {
 	justify-content: center;
 	align-items: stretch;
 	gap: 0.2cm;
+	z-index: 900;
 }
 
 .display {
@@ -119,7 +128,7 @@ html, body {
 	box-shadow: 0 0 0.2cm var(--inner-color) inset; 
 }
 
-.past > div {
+past > div {
 	display: flex;
 	justify-content: left;
 	align-items: center;
@@ -130,17 +139,15 @@ html, body {
 	color: var(--inner-color);
 }
 
-.ans-display-parent > div {
-	display: flex;
-	justify-content: right;
-	align-items: center;
-	color: var(--side-text-color);
+
+.blur-bottom {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	overflow: hidden;
+	background-image: linear-gradient(to top, rgb(255, 0, 0, 0.7), rgb(255, 0, 0, 0.5),  rgb(255, 0, 0, 0.4), rgb(255, 0, 0, 0.1), transparent, transparent, transparent);
+	z-index: 1;
 }
-
-
-
-
-
 
 
 
