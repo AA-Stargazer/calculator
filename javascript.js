@@ -5,7 +5,9 @@
 // TODO when the number for example too long, it shouldn't exceed boundries
 // TODO overflow of the process and process-input, when user hover mouse on left or right, scroll the flow to left or right...
 // TODO update how ans showed, let the result still be shown in the procecssDisplay until new number entered... (result is also shown in the ans display...
+// NOTE: there was a flaw, that would cause error, but I don't remember how it appear at the moment...
 // 
+//
 
 
 
@@ -314,7 +316,8 @@ function executeCalculation() {
 	function fromProcessDisplayToPast() {
 		let tmpDiv = document.createElement('div');
 		tmpDiv.innerHTML = processDisplay.innerHTML;
-		divOfPast.insertBefore(tmpDiv, document.querySelector('.to-insert-before'));
+		pastDivPStringDiv = document.evaluate('//div[contains(@class, "past")]/div[1]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0);
+		pastDivPStringDiv.insertAdjacentHTML('afterend', '<div>' + tmpDiv.innerHTML + '</div>');
 	}
 
 	if (processInput.firstChild)

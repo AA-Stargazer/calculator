@@ -26,7 +26,6 @@ html, body {
 	justify-content: space-around;
 	align-items: center;
 	padding: 0.5cm;
-	z-index: 500;
 }
 
 .content-parent > div {
@@ -46,6 +45,7 @@ html, body {
 	border-color: var(--bg-color);
 	border-style: solid;
 	border-radius: 0.2cm;
+	z-index: 999;
 }
 
 .ans-display-parent > div {
@@ -63,7 +63,6 @@ html, body {
 	justify-content: center;
 	align-items: stretch;
 	gap: 0.2cm;
-	z-index: 900;
 }
 
 .display {
@@ -128,7 +127,7 @@ html, body {
 	box-shadow: 0 0 0.2cm var(--inner-color) inset; 
 }
 
-past > div {
+.past > div {
 	display: flex;
 	justify-content: left;
 	align-items: center;
@@ -145,8 +144,7 @@ past > div {
 	height: 100%;
 	position: absolute;
 	overflow: hidden;
-	background-image: linear-gradient(to top, rgb(255, 0, 0, 0.7), rgb(255, 0, 0, 0.5),  rgb(255, 0, 0, 0.4), rgb(255, 0, 0, 0.1), transparent, transparent, transparent);
-	z-index: 1;
+	background-image: linear-gradient(to top, rgb(6, 1, 8, 1), rgb(6, 1, 8, 0.8), rgb(6, 1, 8, 0.4), rgb(6, 1, 8, 0.4), rgb(6, 1, 8, 0.1), transparent, transparent, transparent);
 }
 
 
