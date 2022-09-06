@@ -140,15 +140,11 @@ ansButton.addEventListener('click', () => {
 
 // -- MOUSE HOVER SCROLL --
 
-// -- mouseover wouldn't work, because to add blurry affect while going to bottom, we added on top of these. and then adjusted the z-index of the .content... if we give higher index to past, then blurry/shadow effect wouldn't affect (I couldn't find a way to do it inside the div itself..., it was breaking proportions...)
-// -- -- but we can at least cover bigger area...
-// divOfPast.addEventListener('mouseover', (event) => {
-// 	console.log('event');
-// });
 let inTopPast = false;
 let inBottomPast = false;
 let scrollIsOn = false; // otherwise, with every move, another scrollPast() is run, we just need 1 to control it...
 let scrollSleep = 1000; // time to sleep after every scroll, used in scrollPast
+let fromScrollPast = false;
 document.body.addEventListener('mousemove', (event) => {
 	pastTopCoordinate = divOfPast.offsetTop;
 	pastBottomCoordinate = divOfPast.offsetTop + divOfPast.clientHeight;
@@ -156,26 +152,27 @@ document.body.addEventListener('mousemove', (event) => {
 	pastLeftCoordinate = divOfPast.offsetLeft;
 	pastRightCoordinate = divOfPast.offsetLeft + divOfPast.offsetWidth;
 
-	// console.log(event.clientX,  pastLeftCoordinate, pastRightCoordinate);
 	if (event.clientX > pastLeftCoordinate && event.clientX < pastRightCoordinate)
 	{
 		if (event.clientY < pastMiddleCoordinate && event.clientY > pastTopCoordinate)
 		{
 			inTopPast = true;
 			inBottomPast = false;
-			scrollPast(false, event.clientX, event.clientY);
+			scrollPast(event.clientX, event.clientY);
 		}
 		else if (event.clientY > pastMiddleCoordinate && event.clientY < pastBottomCoordinate)
 		{
 			inTopPast = false;
 			inBottomPast = true;
-			scrollPast(false, event.clientX, event.clientY);
+			scrollPast(event.clientX, event.clientY);
 		}
 		else
 			scrollIsOn = false;
+			fromScrollPast = false;
 	}
 	else
 		scrollIsOn = false;
+		fromScrollPast = false;
 	
 });
 
@@ -185,11 +182,9 @@ document.body.addEventListener('mouseout', (event) => {
 	inBottomPast = false;
 });
 
-// TODO create function, and in the functiton, call ihe function itself, so we can have some kind of while loop. Then create a variable if mouse in the screen etc, and create an if statement inside the function, so it stops when the mouse gets out from the positions we want...
-function scrollPast(fromScrollPast = false) {
-	// directly taking as argument (like scrollPast(clientX=event.clientX, clientY=event.clientY);) didn't work...
-	clientX = arguments[1];
-	clientY = arguments[2];
+function scrollPast() {
+	clientX = arguments[0];
+	clientY = arguments[1];
 	
 
 	divTop = divOfPast.offsetTop;
@@ -208,7 +203,8 @@ function scrollPast(fromScrollPast = false) {
 			{
 				console.log('top');
 				setTimeout(() => {
-						scrollPast(fromScrollPast=true, clientX, clientY); // passing clientX and clientY, if mouse moves, this function would be alled from scratch, so it's ok...
+						scrollPast(clientX, clientY); // passing clientX and clientY, if mouse moves, this function would be alled from scratch, so it's ok...
+						fromScrollPast = true;
 					}
 					, scrollSleep 
 				);
@@ -217,7 +213,8 @@ function scrollPast(fromScrollPast = false) {
 			{
 				console.log('bottom');
 				setTimeout(() => {
-						scrollPast(fromScrollPast=true, clientX, clientY); // passing clientX and clientY, if mouse moves, this function would be alled from scratch, so it's ok...
+						scrollPast(clientX, clientY); // passing clientX and clientY, if mouse moves, this function would be alled from scratch, so it's ok...
+						fromScrollPast = true;
 
 					}
 					, scrollSleep
