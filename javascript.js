@@ -150,74 +150,79 @@ let inBottomPast = false;
 let scrollIsOn = false; // otherwise, with every move, another scrollPast() is run, we just need 1 to control it...
 let scrollSleep = 1000; // time to sleep after every scroll, used in scrollPast
 document.body.addEventListener('mousemove', (event) => {
-	// // console.log(event); // e.g.: "mousemove { target: div.blur-bottom, buttons: 0, clientX: 302, clientY: 423, layerX: 302, layerY: 423 }"
-	// console.log(event.clientY);
-	// console.log(divOfPast.offsetTop);
-	// console.log(divOfPast.clientHeight);
-
 	pastTopCoordinate = divOfPast.offsetTop;
 	pastBottomCoordinate = divOfPast.offsetTop + divOfPast.clientHeight;
 	pastMiddleCoordinate = (divOfPast.offsetTop + divOfPast.clientHeight) / 2;
 	pastLeftCoordinate = divOfPast.offsetLeft;
 	pastRightCoordinate = divOfPast.offsetLeft + divOfPast.offsetWidth;
 
-	console.log(event.clientX,  pastLeftCoordinate, pastRightCoordinate);
+	// console.log(event.clientX,  pastLeftCoordinate, pastRightCoordinate);
 	if (event.clientX > pastLeftCoordinate && event.clientX < pastRightCoordinate)
 	{
 		if (event.clientY < pastMiddleCoordinate && event.clientY > pastTopCoordinate)
 		{
 			inTopPast = true;
 			inBottomPast = false;
-			scrollPast();
+			scrollPast(false, event.clientX, event.clientY);
 		}
 		else if (event.clientY > pastMiddleCoordinate && event.clientY < pastBottomCoordinate)
 		{
 			inTopPast = false;
 			inBottomPast = true;
-			scrollPast();
+			scrollPast(false, event.clientX, event.clientY);
 		}
 		else
 			scrollIsOn = false;
 	}
 	else
-
-		// -------------- AS I concerned, this didn't work (because of the setTimeout, gotta be precise and can't...)... I'll also create mouse position if statements in the scrollPast, so everytime the function executed, it also can check simultaneously...
-		// setTimeout(()=> {
-		// 	scrollIsOn = false;
-		// }, scrollSleep + 10 // need to wait, otherwise this triggers the if statement in the sccrollPast
-		// );
-
-
+		scrollIsOn = false;
 	
 });
+
 document.body.addEventListener('mouseout', (event) => {
 	console.log('mouse out');
 	inTopPast = false;
 	inBottomPast = false;
 });
+
 // TODO create function, and in the functiton, call ihe function itself, so we can have some kind of while loop. Then create a variable if mouse in the screen etc, and create an if statement inside the function, so it stops when the mouse gets out from the positions we want...
 function scrollPast(fromScrollPast = false) {
-	// reason adding fromscrollPast to control the flow, I created scrollIsOn, otherwise multiple scrollPast functions was being stacked. So to keep the scrolling, the function that called inside the scrollPast should determinable... Also scrollIsOn controlled when the cursor outside of the divOfPast too... So things also kinda reset when mouse etc is out...
+	// directly taking as argument (like scrollPast(clientX=event.clientX, clientY=event.clientY);) didn't work...
+	clientX = arguments[1];
+	clientY = arguments[2];
+	
+
+	divTop = divOfPast.offsetTop;
+	divBottom = divOfPast.offsetTop + divOfPast.clientHeight;
+	divLeft = divOfPast.offsetLeft;
+	divRight = divOfPast.offsetLeft + divOfPast.offsetWidth;
+
+
 	if (!scrollIsOn || fromScrollPast)
 	{
-		scrollIsOn = true;
-		if (inTopPast)
+												    // divBottom is higher number !!! -_-
+		if (divLeft < clientX && clientX < divRight && divBottom > clientY && clientY > divTop)
 		{
-			console.log('top');
-			setTimeout(() => {
-					scrollPast(fromScrollPast=true);
-				}
-				, scrollSleep 
-			);
-		}
-		else if (inBottomPast)
-		{
-			console.log('bottom');
-			setTimeout(() => {
-					scrollPast(fromScrollPast=true);
-				}
-				, scrollSleep
-			);
+			scrollIsOn = true;
+			if (inTopPast)
+			{
+				console.log('top');
+				setTimeout(() => {
+						scrollPast(fromScrollPast=true, clientX, clientY); // passing clientX and clientY, if mouse moves, this function would be alled from scratch, so it's ok...
+					}
+					, scrollSleep 
+				);
+			}
+			else if (inBottomPast)
+			{
+				console.log('bottom');
+				setTimeout(() => {
+						scrollPast(fromScrollPast=true, clientX, clientY); // passing clientX and clientY, if mouse moves, this function would be alled from scratch, so it's ok...
+
+					}
+					, scrollSleep
+				);
+			}
 		}
 	}
 };
@@ -531,5 +536,10 @@ function updateAnsDisplay() {
 
 
 
+
+
+// ---------------------------------------
+// -------------------- SELF NOTE --------------------
+// you can declare variable beefore the funtion declaration, but variable declaration should be before the function execution !!!!
 
 
