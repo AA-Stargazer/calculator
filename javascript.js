@@ -144,7 +144,8 @@ let inTopPast = false;
 let inBottomPast = false;
 let scrollIsOn = false; // otherwise, with every move, another scrollPast() is run, we just need 1 to control it...
 let scrollSleep = 1000; // time to sleep after every scroll, used in scrollPast
-let fromScrollPast = false;
+let clientX = null; // making these global, would let the scrollPast function to read when it's going on it's own... and we don't have to pass these variables to the scrollPast function everytime
+let clientY = null;
 document.body.addEventListener('mousemove', (event) => {
 	pastTopCoordinate = divOfPast.offsetTop;
 	pastBottomCoordinate = divOfPast.offsetTop + divOfPast.clientHeight;
@@ -152,27 +153,28 @@ document.body.addEventListener('mousemove', (event) => {
 	pastLeftCoordinate = divOfPast.offsetLeft;
 	pastRightCoordinate = divOfPast.offsetLeft + divOfPast.offsetWidth;
 
+	clientX = event.clientX;
+	clientY = event.clientY;
+
 	if (event.clientX > pastLeftCoordinate && event.clientX < pastRightCoordinate)
 	{
 		if (event.clientY < pastMiddleCoordinate && event.clientY > pastTopCoordinate)
 		{
 			inTopPast = true;
 			inBottomPast = false;
-			scrollPast(event.clientX, event.clientY);
+			scrollPast(false);
 		}
 		else if (event.clientY > pastMiddleCoordinate && event.clientY < pastBottomCoordinate)
 		{
 			inTopPast = false;
 			inBottomPast = true;
-			scrollPast(event.clientX, event.clientY);
+			scrollPast(false);
 		}
 		else
 			scrollIsOn = false;
-			fromScrollPast = false;
 	}
 	else
 		scrollIsOn = false;
-		fromScrollPast = false;
 	
 });
 
@@ -180,12 +182,10 @@ document.body.addEventListener('mouseout', (event) => {
 	console.log('mouse out');
 	inTopPast = false;
 	inBottomPast = false;
+	scrollIsOn = false;
 });
 
-function scrollPast() {
-	clientX = arguments[0];
-	clientY = arguments[1];
-	
+function scrollPast(fromScrollPast=false) {
 
 	divTop = divOfPast.offsetTop;
 	divBottom = divOfPast.offsetTop + divOfPast.clientHeight;
@@ -203,8 +203,8 @@ function scrollPast() {
 			{
 				console.log('top');
 				setTimeout(() => {
-						scrollPast(clientX, clientY); // passing clientX and clientY, if mouse moves, this function would be alled from scratch, so it's ok...
-						fromScrollPast = true;
+						scrollPast(fromScrollPast=true);
+						scrollOpenFromFunction = true;
 					}
 					, scrollSleep 
 				);
@@ -213,9 +213,7 @@ function scrollPast() {
 			{
 				console.log('bottom');
 				setTimeout(() => {
-						scrollPast(clientX, clientY); // passing clientX and clientY, if mouse moves, this function would be alled from scratch, so it's ok...
-						fromScrollPast = true;
-
+						scrollPast(fromScrollPast=true);
 					}
 					, scrollSleep
 				);
