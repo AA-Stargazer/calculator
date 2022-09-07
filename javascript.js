@@ -1,19 +1,16 @@
 // IDEAS
 // to left or right etc, add a div, and pass what's inside processDisplay beefore executing calculation with equalButton, so it can be like past calculations, also make them insnide <a>, so when the user click, we can pass what's inside the particular divs that repressents past calculations into the processDisplay...
 //
-// TODO show the result in the proccessInput... or not. idk. leave this as is, just create the div for past processes
-// TODO when the number for example too long, it shouldn't exceed boundries
+// TODO when the number for example too long, it shouldn't exceed boundries 
 // TODO overflow of the process and process-input, when user hover mouse on left or right, scroll the flow to left or right...
 // TODO update how ans showed, let the result still be shown in the procecssDisplay until new number entered... (result is also shown in the ans display...
 // NOTE: there was a flaw, that would cause error, but I don't remember how it appear at the moment...
-// 
-//
 
 
 
 // NOTE after having result, if we continue without clicking AC etc, when we pass numbers with operations, operations all bein left in the left of the added number. Which we adjusted like this, but we can add ANS. So the user can continue like he started how to use the calculator...
 
-// NOTE I have lots of other things in my mind, but this already should be enough. Just will complete the past and ans parts, and then go on...
+// NOTE I have lots of other things in my mind, but this already should be enough. Just will complete the past and ans parts, and maybe some scrolliing then go on...
 // -- some of them are creating limited length array of ans, for example when you click ans twice, you'd get the result of twices previous operation etc..
 // -- there are some other usage things....
 // -- for example when using ans, we can instead use 'ANS' as a word instead of it's number. But still there might be some peoples that want to use it like this, but I guess standard is just showing the word 'ANS'. Anyway, already been quite a while, I gotta go on... after adding hover scrolling for pastDisplay, processDisplay etc, I'll leave...
@@ -138,8 +135,9 @@ ansButton.addEventListener('click', () => {
 	}
 });
 
-// -- MOUSE HOVER SCROLL --
 
+
+// -- MOUSE HOVER SCROLL --
 let inTopPast = false;
 let inBottomPast = false;
 let scrollIsOn = false;
@@ -150,6 +148,8 @@ document.body.addEventListener('mousemove', (event) => {
 	pastTopCoordinate = divOfPast.offsetTop;
 	pastBottomCoordinate = divOfPast.offsetTop + divOfPast.clientHeight;
 	pastMiddleCoordinate = (divOfPast.offsetTop + divOfPast.clientHeight) / 2;
+	pastMiddleCoordinateTop = pastMiddleCoordinate - ((divOfPast.offsetHeight * 2) / 10);
+	pastMiddleCoordinateBottom = pastMiddleCoordinate + ((divOfPast.offsetHeight * 2) / 10);
 	pastLeftCoordinate = divOfPast.offsetLeft;
 	pastRightCoordinate = divOfPast.offsetLeft + divOfPast.offsetWidth;
 
@@ -158,19 +158,20 @@ document.body.addEventListener('mousemove', (event) => {
 
 	if (event.clientX > pastLeftCoordinate && event.clientX < pastRightCoordinate)
 	{
-		if (event.clientY < pastMiddleCoordinate && event.clientY > pastTopCoordinate)
+		if (event.clientY < pastMiddleCoordinateTop && event.clientY > pastTopCoordinate)
 		{
 			inTopPast = true;
 			inBottomPast = false;
 			scrollPast(false);
 		}
-		else if (event.clientY > pastMiddleCoordinate && event.clientY < pastBottomCoordinate)
+		else if (event.clientY > pastMiddleCoordinateBottom && event.clientY < pastBottomCoordinate)
 		{
 			inTopPast = false;
 			inBottomPast = true;
 			scrollPast(false);
 		}
 		else
+			console.log('out of scrolling areas');
 			scrollIsOn = false;
 	}
 	else
@@ -192,16 +193,24 @@ function scrollPast(fromScrollPast=false) {
 	divBottom = divOfPast.offsetTop + divOfPast.clientHeight;
 	divLeft = divOfPast.offsetLeft;
 	divRight = divOfPast.offsetLeft + divOfPast.offsetWidth;
+	pastMiddleCoordinateTop = pastMiddleCoordinate - ((divOfPast.offsetHeight * 2) / 10);
+	pastMiddleCoordinateBottom = pastMiddleCoordinate + ((divOfPast.offsetHeight * 2) / 10);
+
 
 
 	if ((!scrollIsOn || fromScrollPast))
 	{
 												    // divBottom is higher number !!! -_-
-		if (divLeft < clientX && clientX < divRight && divBottom > clientY && clientY > divTop)
+		if ((divLeft < clientX && clientX < divRight) 
+			&& 
+			(	(divBottom > clientY && clientY > pastMiddleCoordinateBottom) 
+				|| (divTop < clientY && clientY < pastMiddleCoordinateTop)
+			)
+		) // just checking if mouse is in the main boundaries is enough, top or bottom controlled by eventlistener...
 		{
 			if (inTopPast)
 			{
-				divOfPast.scrollBy({left:0, top:-10, behavior:'smooth'});
+				divOfPast.scrollBy({left:0, top:-40, behavior:'smooth'});
 				scrollIsOn = true;
 				console.log('top');
 				setTimeout(() => {
@@ -213,7 +222,7 @@ function scrollPast(fromScrollPast=false) {
 			}
 			else if (inBottomPast)
 			{
-				divOfPast.scrollBy({left:0, top:10, behavior:'smooth'});
+				divOfPast.scrollBy({left:0, top:40, behavior:'smooth'});
 				scrollIsOn = true;
 				console.log('bottom');
 				setTimeout(() => {
