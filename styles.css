@@ -127,6 +127,10 @@ html, body {
 	box-shadow: 0 0 0.2cm var(--inner-color) inset; 
 }
 
+.past {
+	overflow: visible;
+}
+
 .past > div {
 	display: flex;
 	justify-content: left;

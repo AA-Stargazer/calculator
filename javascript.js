@@ -142,8 +142,8 @@ ansButton.addEventListener('click', () => {
 
 let inTopPast = false;
 let inBottomPast = false;
-let scrollIsOn = false; // otherwise, with every move, another scrollPast() is run, we just need 1 to control it...
-let scrollSleep = 1000; // time to sleep after every scroll, used in scrollPast
+let scrollIsOn = false;
+let scrollSleep = 1000;
 let clientX = null; // making these global, would let the scrollPast function to read when it's going on it's own... and we don't have to pass these variables to the scrollPast function everytime
 let clientY = null;
 document.body.addEventListener('mousemove', (event) => {
@@ -193,14 +193,14 @@ function scrollPast(fromScrollPast=false) {
 	divRight = divOfPast.offsetLeft + divOfPast.offsetWidth;
 
 
-	if (!scrollIsOn || fromScrollPast)
+	if ((!scrollIsOn || fromScrollPast))
 	{
 												    // divBottom is higher number !!! -_-
 		if (divLeft < clientX && clientX < divRight && divBottom > clientY && clientY > divTop)
 		{
-			scrollIsOn = true;
 			if (inTopPast)
 			{
+				scrollIsOn = true;
 				console.log('top');
 				setTimeout(() => {
 						scrollPast(fromScrollPast=true);
@@ -211,6 +211,7 @@ function scrollPast(fromScrollPast=false) {
 			}
 			else if (inBottomPast)
 			{
+				scrollIsOn = true;
 				console.log('bottom');
 				setTimeout(() => {
 						scrollPast(fromScrollPast=true);
