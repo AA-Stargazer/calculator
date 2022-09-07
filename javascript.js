@@ -143,7 +143,7 @@ ansButton.addEventListener('click', () => {
 let inTopPast = false;
 let inBottomPast = false;
 let scrollIsOn = false;
-let scrollSleep = 1000;
+let scrollSleep = 10;
 let clientX = null; // making these global, would let the scrollPast function to read when it's going on it's own... and we don't have to pass these variables to the scrollPast function everytime
 let clientY = null;
 document.body.addEventListener('mousemove', (event) => {
@@ -201,6 +201,7 @@ function scrollPast(fromScrollPast=false) {
 		{
 			if (inTopPast)
 			{
+				divOfPast.scrollBy({left:0, top:-10, behavior:'smooth'});
 				scrollIsOn = true;
 				console.log('top');
 				setTimeout(() => {
@@ -212,6 +213,7 @@ function scrollPast(fromScrollPast=false) {
 			}
 			else if (inBottomPast)
 			{
+				divOfPast.scrollBy({left:0, top:10, behavior:'smooth'});
 				scrollIsOn = true;
 				console.log('bottom');
 				setTimeout(() => {
@@ -530,6 +532,22 @@ function stringIncludesChar(_string, _char) {
 
 function updateAnsDisplay() {
 	ansDisplay.innerText = `${ANS} = ANS`;
+}
+
+
+
+// ----------------------------------------------------------------------
+//
+// --------------- FUNCTIONS TO USE IN THE CONSOLE ----------------------
+
+function fillDivOfPast() {
+	let pastDivPStringDiv = document.evaluate('//div[contains(@class, "past")]/div[1]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0);
+	for (let i = 0; i < 100; ++i)
+	{
+		let element = document.createElement('div');
+		element.innerHTML = `${i} + ${i}`;
+		pastDivPStringDiv.insertAdjacentElement('afterend', element);
+	}
 }
 
 
