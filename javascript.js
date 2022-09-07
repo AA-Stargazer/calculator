@@ -185,6 +185,7 @@ document.body.addEventListener('mouseout', (event) => {
 	scrollIsOn = false;
 });
 
+// NOTE if, for example, mouse gets out of the area, and gets into the area during the scrollSleep of setTimeout, then multiple of the function might be called... I don't think we'lll have this issue a lot when we reduce the scrollSleep, but make the scrollSleep veryy small, and therefore also the scrolling every time...
 function scrollPast(fromScrollPast=false) {
 
 	divTop = divOfPast.offsetTop;
@@ -220,6 +221,8 @@ function scrollPast(fromScrollPast=false) {
 				);
 			}
 		}
+		else
+			scrollIsOn = false;
 	}
 };
 
