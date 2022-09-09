@@ -94,12 +94,12 @@ html, body {
 	height: 50%;
 	width: 100%;
 	display: flex;
-	flex-wrap: wrap;
 	flex-direction: row-reverse;
 	justify-content: right;
 	align-items: top;
 	align-content: top;
-	overflow: hidden;
+	overflow: scroll;
+	scrollbar-width: none;
 }
 
 

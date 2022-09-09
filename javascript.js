@@ -137,7 +137,7 @@ ansButton.addEventListener('click', () => {
 
 
 
-// -- MOUSE HOVER SCROLL --
+// -- MOUSE HOVER SCROLL PAST--------------------------
 let inTopPast = false;
 let inBottomPast = false;
 let scrollIsOn = false;
@@ -171,7 +171,7 @@ document.body.addEventListener('mousemove', (event) => {
 			scrollPast(false);
 		}
 		else
-			console.log('out of scrolling areas');
+			// console.log('out of scrolling areas');
 			scrollIsOn = false;
 	}
 	else
@@ -180,7 +180,7 @@ document.body.addEventListener('mousemove', (event) => {
 });
 
 document.body.addEventListener('mouseout', (event) => {
-	console.log('mouse out');
+	// onsole.log('mouse out');
 	inTopPast = false;
 	inBottomPast = false;
 	scrollIsOn = false;
@@ -200,7 +200,6 @@ function scrollPast(fromScrollPast=false) {
 
 	if ((!scrollIsOn || fromScrollPast))
 	{
-												    // divBottom is higher number !!! -_-
 		if ((divLeft < clientX && clientX < divRight) 
 			&& 
 			(	(divBottom > clientY && clientY > pastMiddleCoordinateBottom) 
@@ -212,10 +211,9 @@ function scrollPast(fromScrollPast=false) {
 			{
 				divOfPast.scrollBy({left:0, top:-40, behavior:'smooth'});
 				scrollIsOn = true;
-				console.log('top');
+				// console.log('top');
 				setTimeout(() => {
 						scrollPast(fromScrollPast=true);
-						scrollOpenFromFunction = true;
 					}
 					, scrollSleep 
 				);
@@ -224,7 +222,7 @@ function scrollPast(fromScrollPast=false) {
 			{
 				divOfPast.scrollBy({left:0, top:40, behavior:'smooth'});
 				scrollIsOn = true;
-				console.log('bottom');
+				// console.log('bottom');
 				setTimeout(() => {
 						scrollPast(fromScrollPast=true);
 					}
@@ -237,6 +235,129 @@ function scrollPast(fromScrollPast=false) {
 	}
 };
 
+
+
+// -- MOUSE HOVER SCROLL PROCESS DISPLAY ----------------------------
+let inRightDisplay = false;
+let inLeftDisplay = false;
+let displayScrollIsOn = false;  // for running first time from idle
+let displayScrollSleep = 1000;
+
+// ok, offsetLeft not works as offsetTop, offsetLeft gives distance to closest parent's boundry. Idk, we can create a function, that goes through parent elements and then sums up the ditances etc (with margin, padding whatever...), but to cut short (it's been quite a while to start this project), I'll just manually write it...
+// -- wait, offsetLeft gives what we want... idk
+
+document.body.addEventListener('mousemove', (event) => {
+	processDisplayTopCoordinate = processDisplay.offsetTop;
+	processDisplayBottomCoordinate = processDisplay.offsetTop + processDisplay.clientHeight;
+
+	processDisplayLeftCoordinate = processDisplay.offsetLeft;
+	processDisplayRightCoordinate = processDisplay.offsetLeft + processDisplay.offsetWidth;
+	processDisplayHorizontalMiddleCoordinate = (processDisplayLeftCoordinate + processDisplayRightCoordinate) / 2;
+	processDisplayMiddleCoordinateLeft = processDisplayHorizontalMiddleCoordinate - ((processDisplay.offsetWidth * 2) / 10);
+	processDisplayMiddleCoordinateRight = processDisplayHorizontalMiddleCoordinate + ((processDisplay.offsetWidth * 2) / 10);
+
+	clientX = event.clientX;
+	clientY = event.clientY;
+	
+	if (event.clientY > processDisplayTopCoordinate && event.clientY < processDisplayBottomCoordinate)
+	{
+		if (processDisplayLeftCoordinate < event.clientX && event.clientX < processDisplayMiddleCoordinateLeft)
+		{
+			inRightDisplay = false;
+			inLeftDisplay = true;
+			scrollDisplay(false);
+		}
+		else if (processDisplayMiddleCoordinateRight < event.clientX && event.clientX < processDisplayRightCoordinate)
+		{
+			inRightDisplay = true;
+			inLeftDisplay = false;
+			scrollDisplay(false);
+		}
+		else
+			console.log('out of scrolling areas');
+			displayScrollIsOn = false;
+	}
+	else
+		displayScrollIsOn = false;
+	
+});
+
+
+
+document.body.addEventListener('mouseout', (event) => {
+	console.log('mouse out');
+	inRightDisplay = false;
+	inLeftDisplay = false;
+	displayScrollIsOn = false;
+});
+
+
+
+// you know, when mouse gets in and out faster than the displayScrollSleep, this function called multiple times like past scrolling, but after reducing the displayScrollSleep, this problem can be avoided...
+function scrollDisplay(fromScrollDisplay=false, side=null) {
+
+	divTop = processDisplay.offsetTop;
+	divBottom = divTop + processDisplay.clientHeight;
+	divLeft = processDisplay.offsetLeft;
+	divRight = divLeft + processDisplay.offsetWidth;
+
+	processDisplayHorizontalMiddleCoordinate = (processDisplayLeftCoordinate + processDisplayRightCoordinate) / 2;
+	processDisplayMiddleCoordinateLeft = processDisplayHorizontalMiddleCoordinate - ((processDisplay.offsetWidth * 2) / 10);
+	processDisplayMiddleCoordinateRight = processDisplayHorizontalMiddleCoordinate + ((processDisplay.offsetWidth * 2) / 10);
+
+	if (side == 'left')
+		inLeftDisplay = true;
+	else if (side == 'right')
+		inRightDisplay = true;
+
+
+	// displayScrollIsOn can be opened inside scrollDisplay, and after the function first run by eventlistener, to prevent multiple calling the function by eventlistener...
+	if ((!displayScrollIsOn || fromScrollDisplay))
+	{
+		if ((divTop < clientY && clientY < divBottom) 
+			&& 
+			(	(processDisplayLeftCoordinate < clientX && clientX < processDisplayMiddleCoordinateLeft) 
+				|| (processDisplayMiddleCoordinateRight < clientX && clientX < processDisplayRightCoordinate)
+			)
+		)
+		{
+			
+			// for some reason I dont know, inLeftDisplayy and inRightDisplay was being updated to false (maybe something in css was triggering), so I added 'side' as argumnet...
+			if (side == 'left')
+				inLeftDisplay = true;
+			else if (side == 'right')
+				inRightDisplay = true;
+
+			// console.log(clientX, clientY, '\n', `inRightDisplay: ${inRightDisplay}\n inLeftDisplay: ${inLeftDisplay}`);
+			if (inRightDisplay)
+			{
+				processDisplay.scrollBy({left:10, top:0, behavior:'smooth'});
+				displayScrollIsOn = true;
+				console.log('right');
+				setTimeout(() => {
+						scrollDisplay(true, 'right');
+					}
+					, displayScrollSleep 
+				);
+			}
+			else if (inLeftDisplay)
+			{
+				processDisplay.scrollBy({left:-10, top:0, behavior:'smooth'});
+				displayScrollIsOn = true;
+				console.log('left');
+				setTimeout(() => {
+						scrollDisplay(true, 'left');
+					}
+					, displayScrollSleep
+				);
+			}
+			else
+				console.log(clientX, clientY, '\n', `inRightDisplay: ${inRightDisplay}\n inLeftDisplay: ${inLeftDisplay}`);
+		}
+		else
+			displayScrollIsOn = false;
+	}
+};
 
 
 
@@ -559,6 +680,17 @@ function fillDivOfPast() {
 	}
 }
 
+function fillProcessDisplay() {
+	for (let i = 0; i < 40; ++i)
+	{
+		let element = document.createElement('div');
+		element.innerHTML = `${i}`;
+		processDisplay.insertAdjacentElement('beforeend', element);
+		element = document.createElement('div');
+		element.innerHTML = `+`;
+		processDisplay.insertAdjacentElement('beforeend', element);
+	}
+}
 
 
 
