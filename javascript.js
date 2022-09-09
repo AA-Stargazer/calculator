@@ -241,12 +241,10 @@ function scrollPast(fromScrollPast=false) {
 let inRightDisplay = false;
 let inLeftDisplay = false;
 let displayScrollIsOn = false;  // for running first time from idle
-let displayScrollSleep = 1000;
+let displayScrollSleep = 10;
 
-// ok, offsetLeft not works as offsetTop, offsetLeft gives distance to closest parent's boundry. Idk, we can create a function, that goes through parent elements and then sums up the ditances etc (with margin, padding whatever...), but to cut short (it's been quite a while to start this project), I'll just manually write it...
-// -- wait, offsetLeft gives what we want... idk
 
-document.body.addEventListener('mousemove', (event) => {
+processDisplay.addEventListener('mousemove', (event) => {
 	processDisplayTopCoordinate = processDisplay.offsetTop;
 	processDisplayBottomCoordinate = processDisplay.offsetTop + processDisplay.clientHeight;
 
