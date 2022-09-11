@@ -77,30 +77,32 @@ Object.keys(operations).forEach(function(key) {
 			cleanProcessDisplay();
 		}
 
-
-		if (!processDisplay.firstChild) // there'sn't anything in the processDisplay, directly can pass
+		if (processInput.childElementCount >= 1)
 		{
-			addFromInputToProcess(tmpString);
-			addFromInputToProcess(this.innerText);
-			cleanProcessInput();
-		}
-		else if (parseInt(processDisplay.firstChild.innerText)) // element at the rightest in processDisplay is not a operation sign but a number, so we should pass operation sign    // this can also appear after deletion!!!
-		{
-			let tmpP = document.createElement('p');
-			tmpP.innerText = this.innerText;
-			processDisplay.insertAdjacentElement('afterbegin', tmpP);
-			tmpP = document.createElement('p');
-			tmpP.innerText = numberInInput();
-			processDisplay.insertAdjacentElement('afterbegin', tmpP);
-			cleanProcessInput();
-		}
-		else
-		{
-			if (tmpString != '') // this probably would be enough...
+			if (!processDisplay.firstChild) // there'sn't anything in the processDisplay, directly can pass
 			{
 				addFromInputToProcess(tmpString);
 				addFromInputToProcess(this.innerText);
 				cleanProcessInput();
+			}
+			else if (parseInt(processDisplay.firstChild.innerText) && !resultBeingShown) // element at the rightest in processDisplay is not a operation sign but a number, so we should pass operation sign    // this can also appear after deletion!!! // but shouldn't be the result...
+			{
+				let tmpP = document.createElement('p');
+				tmpP.innerText = this.innerText;
+				processDisplay.insertAdjacentElement('afterbegin', tmpP);
+				tmpP = document.createElement('p');
+				tmpP.innerText = numberInInput();
+				processDisplay.insertAdjacentElement('afterbegin', tmpP);
+				cleanProcessInput();
+			}
+			else
+			{
+				if (tmpString != '') // this probably enough for the rest I think
+				{
+					addFromInputToProcess(tmpString);
+					addFromInputToProcess(this.innerText);
+					cleanProcessInput();
+				}
 			}
 		}
 	});
@@ -272,7 +274,7 @@ processDisplay.addEventListener('mousemove', (event) => {
 			scrollDisplay(false);
 		}
 		else
-			console.log('out of scrolling areas');
+			// console.log('out of scrolling areas');
 			displayScrollIsOn = false;
 	}
 	else
@@ -283,7 +285,7 @@ processDisplay.addEventListener('mousemove', (event) => {
 
 
 document.body.addEventListener('mouseout', (event) => {
-	console.log('mouse out');
+	// console.log('mouse out');
 	inRightDisplay = false;
 	inLeftDisplay = false;
 	displayScrollIsOn = false;
@@ -331,7 +333,7 @@ function scrollDisplay(fromScrollDisplay=false, side=null) {
 			{
 				processDisplay.scrollBy({left:10, top:0, behavior:'smooth'});
 				displayScrollIsOn = true;
-				console.log('right');
+				// console.log('right');
 				setTimeout(() => {
 						scrollDisplay(true, 'right');
 					}
@@ -342,7 +344,7 @@ function scrollDisplay(fromScrollDisplay=false, side=null) {
 			{
 				processDisplay.scrollBy({left:-10, top:0, behavior:'smooth'});
 				displayScrollIsOn = true;
-				console.log('left');
+				// console.log('left');
 				setTimeout(() => {
 						scrollDisplay(true, 'left');
 					}
@@ -350,7 +352,8 @@ function scrollDisplay(fromScrollDisplay=false, side=null) {
 				);
 			}
 			else
-				console.log(clientX, clientY, '\n', `inRightDisplay: ${inRightDisplay}\n inLeftDisplay: ${inLeftDisplay}`);
+				// console.log(clientX, clientY, '\n', `inRightDisplay: ${inRightDisplay}\n inLeftDisplay: ${inLeftDisplay}`);
+				;		
 		}
 		else
 			displayScrollIsOn = false;
@@ -619,6 +622,7 @@ function multiplication_division_execute() {
 		processDisplay.removeChild(the_node);
 		
 		multiplication_division_nodes = document.evaluate(multiplication_division_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+		console.log(processInput.innerHTML);
 	}
 
 }
@@ -655,7 +659,17 @@ function stringIncludesChar(_string, _char) {
 	});
 	return it_has;
 }
-
+function stringIncludesOneOfTheCharInTheList(_string, _list) {
+	let it_has = false;
+	Array.from(_string).forEach((stringChar) => {
+		Array.from(_list).forEach((stringToCheck) => {
+			if (stringChar == stringToCheck)
+				it_has = true;
+		});
+	});
+	console.log(it_has);
+	return it_has;
+}
 
 
 function updateAnsDisplay() {
