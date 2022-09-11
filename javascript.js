@@ -574,7 +574,7 @@ function executeCalculation() {
 	}
 	else // after deletion, there might be calculations to process etc,...
 	{
-		if (processDisplay.childElementCount > 2) // min 2 number and 1 operation sign
+		if (processDisplay.childElementCount > 2 && parseFloat(processDisplay.firstChild.innerText)) // min 2 number and 1 operation sign, and first child (element in the rightest) is number
 		{
 			fromProcessDisplayToPast();
 			
