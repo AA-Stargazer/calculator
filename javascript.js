@@ -630,7 +630,14 @@ function multiplication_division_execute() {
 
 // very similat to multiplication_division
 function addition_substraction_execute() {
-	addition_substraction_xpath = '//div[@class="process"]/*[contains(text(), "+") or contains(text(), "-")]';
+	addition_substraction_xpath = '//div[@class="process"]/*[(contains(text(), "+") or contains(text(), "-")) and not(';
+	for (let i = 0; i < 10; i++)
+		if (i < 9)
+			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), ${i}) and `;
+		else
+			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), ${i}))]`;
+	console.log(addition_substraction_xpath);
+
 
 	let addition_substraction_nodes = document.evaluate(addition_substraction_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 	
