@@ -116,7 +116,7 @@ deleteButton.addEventListener('click', cleaningFunction);
 equalButton.addEventListener('click', executeCalculation);
 
 dotButton.addEventListener('click', function() {
-	if (processInput.firstChild)
+	if (processInput.firstChild && document.evaluate('//*[contains(text(), ".")]', processInput, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength <= 1)
 	{
 		if (processInput.firstChild.innerText != '.')
 		{
@@ -636,7 +636,7 @@ function addition_substraction_execute() {
 			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), ${i}) and `;
 		else
 			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), ${i}))]`;
-	console.log(addition_substraction_xpath);
+	// console.log(addition_substraction_xpath);
 
 
 	let addition_substraction_nodes = document.evaluate(addition_substraction_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
