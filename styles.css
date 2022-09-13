@@ -26,6 +26,7 @@ html, body {
 	justify-content: space-around;
 	align-items: center;
 	padding: 0.5cm;
+	font-size: 0.4cm;
 }
 
 .content-parent > div {
@@ -36,7 +37,7 @@ html, body {
 }
 
 .content-parent > div.content {
-	width: 5cm;
+	width: 7cm;
 	height: initial;
 	background-color: #15BCD6;
 	box-shadow: 0 0 0.5cm #F0DCF5; 
@@ -67,7 +68,7 @@ html, body {
 
 .display {
 	width: 100%;
-	height: 2cm;
+	height: 3cm;
 	background-color: #008599;
 }
 
@@ -80,6 +81,11 @@ html, body {
 	align-items: center;
 
 }
+
+.process-input, .process {
+	font-size: 0.6cm;
+}
+
 
 .process-input {
 	width: 100%;
@@ -121,6 +127,7 @@ html, body {
 	border-radius: 0.1cm;
 	color: var(--bg-color);
 	transition-duration: 0.1s;
+	font-size: 0.4cm;
 }
 
 .box button:hover {
@@ -157,6 +164,7 @@ html, body {
 .controller > div {
 	grid-gap: 0.1cm; 
 	display: grid;
+	height: 4.5cm;
 }
 
 .clear {

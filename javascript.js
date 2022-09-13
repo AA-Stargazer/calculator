@@ -1,15 +1,12 @@
 // IDEAS
-// to left or right etc, add a div, and pass what's inside processDisplay beefore executing calculation with equalButton, so it can be like past calculations, also make them insnide <a>, so when the user click, we can pass what's inside the particular divs that repressents past calculations into the processDisplay...
-//
 // TODO when the number for example too long, it shouldn't exceed boundries 
 // TODO overflow of the process and process-input, when user hover mouse on left or right, scroll the flow to left or right...
 // TODO update how ans showed, let the result still be shown in the procecssDisplay until new number entered... (result is also shown in the ans display...
 // NOTE: there was a flaw, that would cause error, but I don't remember how it appear at the moment...
-// TODO to better usability, we can also add scrolling with hover to vertically for divOfPast and processInput
+// TODO to better usability, we can also add scrolling with hover to vertically for divOfPast and processInput and for ANS
+// TODO ANS when used, it's being added as a whole number instead of each digits being added one by one, maybe this is better, but can add each digit individually,  Idk...
 
 
-
-// NOTE after having result, if we continue without clicking AC etc, when we pass numbers with operations, operations all bein left in the left of the added number. Which we adjusted like this, but we can add ANS. So the user can continue like he started how to use the calculator...
 
 // NOTE I have lots of other things in my mind, but this already should be enough. Just will complete the past and ans parts, and maybe some scrolliing then go on...
 // -- some of them are creating limited length array of ans, for example when you click ans twice, you'd get the result of twices previous operation etc..
@@ -384,7 +381,7 @@ function addOperation(_string) {
 
 	let tmpString = numberInInput();
 		
-	if (processDisplay.childElementCount == 1 && parseFloat(processDisplay.firstChild.innerText) == parseFloat(ANS) && resultBeingShown)
+	if (processDisplay.childElementCount == 1 && resultBeingShown)
 	{
 		cleanProcessDisplay();
 	}
