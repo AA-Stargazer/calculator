@@ -687,7 +687,7 @@ function multiplication_division_execute() {
 
 // very similat to multiplication_division
 function addition_substraction_execute() {
-	addition_substraction_xpath = '//div[@class="process"]/*[(contains(text(), "+") or contains(text(), "-")) and (not(';
+	addition_substraction_xpath = '//div[@class="process"]/*[(contains(text(), "+") or contains(text(), "-")) and not((';
 	for (let i = 0; i < 10; i++)
 		if (i < 9)
 			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), "${i}") and `;
