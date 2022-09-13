@@ -16,6 +16,10 @@
 // -- for example when using ans, we can instead use 'ANS' as a word instead of it's number. But still there might be some peoples that want to use it like this, but I guess standard is just showing the word 'ANS'. Anyway, already been quite a while, I gotta go on... after adding hover scrolling for pastDisplay, processDisplay etc, I'll leave...
 
 
+// NOTE: when using enter, ans not being shown in the processDisplay, but with = button in the keyboard and screen, it's being shown. Idk, but will leave like this...
+// NOTE: if there is just number in the processDisplay, can just equal ANS to it...
+
+
 // --------------------------- VARIABLE ---------------------------------
 let divOfPast = document.querySelector('.past');
 let processDisplay = document.querySelector('.process');
@@ -99,15 +103,21 @@ document.addEventListener('keydown', (event) => {
 	else
 	{
 		let _key = event.key;
-		// console.log(_key);
+		console.log(_key);
 		switch (true)
 		{
 			case (_key == '.'):
-				console.log(_key);
 				addDot();
 				break;
 			case (stringIncludesOneOfTheCharInTheList(_key, operationsArray) && _key.length == 1):
+				// console.log('operation');
 				addOperation(_key);
+				break;
+			case (_key == 'Backspace'):
+				cleaningFunction();
+				break;
+			case (_key == 'Enter' || _key == '=' || _key == '='):
+				executeCalculation();
 				break;
 		}
 	}
@@ -373,7 +383,7 @@ function addOperation(_string) {
 
 	let tmpString = numberInInput();
 		
-	if (processDisplay.childElementCount == 1 && parseFloat(processDisplay.firstChild.innerText) == parseFloat(ANS))
+	if (processDisplay.childElementCount == 1 && parseFloat(processDisplay.firstChild.innerText) == parseFloat(ANS) && resultBeingShown)
 	{
 		cleanProcessDisplay();
 	}
@@ -406,6 +416,14 @@ function addOperation(_string) {
 			}
 		}
 	}
+	else if (parseInt(processDisplay.firstChild.innerText) && !resultBeingShown) // to be able to just pass operationSign for the another specific situation (rightest element in the processDisplay is number, nothing in processInput, so can directly pass operation sign)
+	{
+		console.log('bbbbbbbbbbbbbbbbbb');
+		let tmpP = document.createElement('p');
+		tmpP.innerText = _string;
+		processDisplay.insertAdjacentElement('afterbegin', tmpP);
+	}
+
 }
 
 
@@ -590,7 +608,7 @@ function executeCalculation() {
 		pastDivPStringDiv.insertAdjacentHTML('afterend', '<div>' + tmpDiv.innerHTML + '</div>');
 	}
 
-	if (processInput.firstChild)
+	if (processInput.firstChild && processDisplay.firstChild)
 	{
 		if (!parseInt(processDisplay.firstChild.innerText))
 		{
@@ -669,13 +687,15 @@ function multiplication_division_execute() {
 
 // very similat to multiplication_division
 function addition_substraction_execute() {
-	addition_substraction_xpath = '//div[@class="process"]/*[(contains(text(), "+") or contains(text(), "-")) and not(';
+	addition_substraction_xpath = '//div[@class="process"]/*[(contains(text(), "+") or contains(text(), "-")) and (not(';
 	for (let i = 0; i < 10; i++)
 		if (i < 9)
 			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), "${i}") and `;
 		else
-			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), "${i}"))]`;
+			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), "${i}")))]`;
 	console.log(addition_substraction_xpath);
+	// -- no need to use this everytime run
+	// addition_substraction_xpath = '';
 
 
 	let addition_substraction_nodes = document.evaluate(addition_substraction_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
