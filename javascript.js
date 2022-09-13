@@ -56,11 +56,8 @@ if (processInput.firstChild)
 
 Object.keys(numbers).forEach((key) => {
 	numbers[key]['div'].addEventListener('click', function() {
-		let newP = document.createElement('p');
-		newP.innerText = this.classList[1].split('-')[1];
-		processInput.insertAdjacentElement('afterBegin', newP);
+		addNumber(this.classList[1].split('-')[1]);
 	});
-
 });
 
 
@@ -69,42 +66,7 @@ Object.keys(numbers).forEach((key) => {
 Object.keys(operations).forEach(function(key) {
 	
 	operations[key]['div'].addEventListener('click', function() {
-				
-		let tmpString = numberInInput();
-		
-		if (processDisplay.childElementCount == 1 && parseFloat(processDisplay.firstChild.innerText) == parseFloat(ANS))
-		{
-			cleanProcessDisplay();
-		}
-
-		if (processInput.childElementCount >= 1)
-		{
-			if (!processDisplay.firstChild) // there'sn't anything in the processDisplay, directly can pass
-			{
-				addFromInputToProcess(tmpString);
-				addFromInputToProcess(this.innerText);
-				cleanProcessInput();
-			}
-			else if (parseInt(processDisplay.firstChild.innerText) && !resultBeingShown) // element at the rightest in processDisplay is not a operation sign but a number, so we should pass operation sign    // this can also appear after deletion!!! // but shouldn't be the result...
-			{
-				let tmpP = document.createElement('p');
-				tmpP.innerText = this.innerText;
-				processDisplay.insertAdjacentElement('afterbegin', tmpP);
-				tmpP = document.createElement('p');
-				tmpP.innerText = numberInInput();
-				processDisplay.insertAdjacentElement('afterbegin', tmpP);
-				cleanProcessInput();
-			}
-			else
-			{
-				if (tmpString != '') // this probably enough for the rest I think
-				{
-					addFromInputToProcess(tmpString);
-					addFromInputToProcess(this.innerText);
-					cleanProcessInput();
-				}
-			}
-		}
+		addOperation(this.innerText);
 	});
 
 });
@@ -115,17 +77,7 @@ deleteButton.addEventListener('click', cleaningFunction);
 
 equalButton.addEventListener('click', executeCalculation);
 
-dotButton.addEventListener('click', function() {
-	if (processInput.firstChild && document.evaluate('//*[contains(text(), ".")]', processInput, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength <= 1)
-	{
-		if (processInput.firstChild.innerText != '.')
-		{
-			let tmpP = document.createElement('p');
-			tmpP.innerText = this.innerText;
-			processInput.insertAdjacentElement('afterbegin', tmpP);
-		}
-	}
-});
+dotButton.addEventListener('click', addDot);
 
 
 ansButton.addEventListener('click', () => {
@@ -134,6 +86,30 @@ ansButton.addEventListener('click', () => {
 		let tmpP = document.createElement('p');
 		tmpP.innerText = ANS;
 		processInput.insertAdjacentElement('afterbegin', tmpP);
+	}
+});
+
+document.addEventListener('keydown', (event) => {
+	// console.log(event.key);
+	// thinking to use switch, but loop is better, also got function for this...
+	if (stringIncludesOneOfTheCharInTheList(event.key, numbersArray) && event.key.length == 1)
+	{
+		addNumber(event.key);
+	}
+	else
+	{
+		let _key = event.key;
+		// console.log(_key);
+		switch (true)
+		{
+			case (_key == '.'):
+				console.log(_key);
+				addDot();
+				break;
+			case (stringIncludesOneOfTheCharInTheList(_key, operationsArray) && _key.length == 1):
+				addOperation(_key);
+				break;
+		}
 	}
 });
 
@@ -370,6 +346,69 @@ function scrollDisplay(fromScrollDisplay=false, side=null) {
 // ----------------------------------------------------------------------
 //
 // --------------------------- FUNCTIONS --------------------------------
+
+
+
+function addNumber(_string)
+{
+	let newP = document.createElement('p');
+	newP.innerText = _string;
+	processInput.insertAdjacentElement('afterBegin', newP);
+}
+
+function addDot()
+{
+	if (processInput.firstChild && document.evaluate('//*[contains(text(), ".")]', processInput, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength <= 1)
+	{
+		if (processInput.firstChild.innerText != '.')
+		{
+			let tmpP = document.createElement('p');
+			tmpP.innerText = '.';
+			processInput.insertAdjacentElement('afterbegin', tmpP);
+		}
+	}
+}
+
+function addOperation(_string) {
+
+	let tmpString = numberInInput();
+		
+	if (processDisplay.childElementCount == 1 && parseFloat(processDisplay.firstChild.innerText) == parseFloat(ANS))
+	{
+		cleanProcessDisplay();
+	}
+
+	if (processInput.childElementCount >= 1)
+	{
+		if (!processDisplay.firstChild) // there'sn't anything in the processDisplay, directly can pass
+		{
+			addFromInputToProcess(tmpString);
+			addFromInputToProcess(_string);
+			cleanProcessInput();
+		}
+		else if (parseInt(processDisplay.firstChild.innerText) && !resultBeingShown) // element at the rightest in processDisplay is not a operation sign but a number, so we should pass operation sign    // this can also appear after deletion!!! // but shouldn't be the result...
+		{
+			let tmpP = document.createElement('p');
+			tmpP.innerText = _string;
+			processDisplay.insertAdjacentElement('afterbegin', tmpP);
+			tmpP = document.createElement('p');
+			tmpP.innerText = numberInInput();
+			processDisplay.insertAdjacentElement('afterbegin', tmpP);
+			cleanProcessInput();
+		}
+		else
+		{
+			if (tmpString != '') // this probably enough for the rest I think
+			{
+				addFromInputToProcess(tmpString);
+				addFromInputToProcess(_string);
+				cleanProcessInput();
+			}
+		}
+	}
+}
+
+
 
 function cleaningFunction() {
 	
@@ -616,7 +655,7 @@ function multiplication_division_execute() {
 		const num2 = num2Node.innerText;
 
 		num1Node.innerText = calculate(the_node.innerText, num1, num2);
-		console.log(num1Node);
+		// console.log(num1Node);
 		
 		processDisplay.removeChild(num2Node);
 		processDisplay.removeChild(the_node);
@@ -633,10 +672,10 @@ function addition_substraction_execute() {
 	addition_substraction_xpath = '//div[@class="process"]/*[(contains(text(), "+") or contains(text(), "-")) and not(';
 	for (let i = 0; i < 10; i++)
 		if (i < 9)
-			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), ${i}) and `;
+			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), "${i}") and `;
 		else
-			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), ${i}))]`;
-	// console.log(addition_substraction_xpath);
+			addition_substraction_xpath = addition_substraction_xpath + `contains(text(), "${i}"))]`;
+	console.log(addition_substraction_xpath);
 
 
 	let addition_substraction_nodes = document.evaluate(addition_substraction_xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -674,7 +713,7 @@ function stringIncludesOneOfTheCharInTheList(_string, _list) {
 				it_has = true;
 		});
 	});
-	console.log(it_has);
+	// console.log('--', it_has, '\n', _string, _list);
 	return it_has;
 }
 
