@@ -641,6 +641,21 @@ function executeCalculation() {
 
 			resultBeingShown = true;
 		}
+		else if (processDisplay.childElementCount > 2 && stringIncludesOneOfTheCharInTheList(processDisplay.firstChild.innerText, operationsArray)) // example 6 - 5 *, we remove that (*), and execute the processes...
+		{
+			
+			processDisplay.removeChild(processDisplay.firstChild);
+
+			fromProcessDisplayToPast();
+			
+			multiplication_division_execute();
+			addition_substraction_execute();
+
+			ANS = parseFloat(processDisplay.firstChild.innerText);
+			updateAnsDisplay();
+
+			resultBeingShown = true;
+		}
 	}
 
 }
